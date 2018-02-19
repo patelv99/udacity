@@ -1,10 +1,14 @@
 package com.android.vish.popularmovies;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class Movie implements Serializable {
 
-    private static final String MOVIE_IMAGE_BASE_URL = "http://image.tmdb.org/t/p/w500/";
+    private static final String           MOVIE_IMAGE_BASE_URL = "http://image.tmdb.org/t/p/w500/";
+    private static final SimpleDateFormat DISPLAY_DATE_FORMAT  = new SimpleDateFormat("MMM dd, yyyy");
+    private static final SimpleDateFormat MOVIE_DB_DATE_FORMAT = new SimpleDateFormat("YYYY-MM-dd");
 
     private int    mId;
     private String mImage;
@@ -43,7 +47,12 @@ public class Movie implements Serializable {
     }
 
     public String getReleaseDate() {
-        return mReleaseDate;
+        try {
+            return DISPLAY_DATE_FORMAT.format(MOVIE_DB_DATE_FORMAT.parse(mReleaseDate));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return mReleaseDate;
+        }
     }
 
     public void setReleaseDate(String releaseDate) {

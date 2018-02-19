@@ -12,10 +12,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Spinner;
 
 import java.io.IOException;
 import java.net.URL;
@@ -39,8 +42,36 @@ public class MovieGridFragment extends Fragment {
                 onMovieClick(position);
             }
         });
-        new PopularMoviesTask().execute(NetworkUtils.buildUrl(NetworkUtils.POPULAR_ENDPOINT));
+        setHasOptionsMenu(true);
+        getActivity().setTitle(getString(R.string.movies));
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        Spinner spinner = (Spinner) menu.findItem(R.id.spinner).getActionView();
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // position is the index of the item found in movie_sort_options
+                switch (position) {
+                    case 0:
+                        new GetMoviesTask().execute(NetworkUtils.buildUrl(NetworkUtils.POPULAR_ENDPOINT));
+                        break;
+                    case 1:
+                        new GetMoviesTask().execute(NetworkUtils.buildUrl(NetworkUtils.TOP_RATED_ENDPOINT));
+                        break;
+                    default:
+                        new GetMoviesTask().execute(NetworkUtils.buildUrl(NetworkUtils.POPULAR_ENDPOINT));
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // do nothing
+            }
+        });
     }
 
     /**
@@ -83,11 +114,10 @@ public class MovieGridFragment extends Fragment {
         }
     }
 
-
     /**
      * Perform async call to fetch all popular movies
      */
-    public class PopularMoviesTask extends AsyncTask<URL, Void, String> {
+    public class GetMoviesTask extends AsyncTask<URL, Void, String> {
 
         @Override
         protected void onPreExecute() {
@@ -97,14 +127,14 @@ public class MovieGridFragment extends Fragment {
 
         @Override
         protected String doInBackground(URL... params) {
-            URL popularMoviesUrl = params[0];
-            String popularMoviesResult = null;
+            URL moviesResponseUrl = params[0];
+            String moviesResponse = null;
             try {
-                popularMoviesResult = NetworkUtils.getResponseFromHttpUrl(popularMoviesUrl);
+                moviesResponse = NetworkUtils.getResponseFromHttpUrl(moviesResponseUrl);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return popularMoviesResult;
+            return moviesResponse;
         }
 
         @Override

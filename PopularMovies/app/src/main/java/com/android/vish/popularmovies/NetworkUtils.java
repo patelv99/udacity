@@ -20,9 +20,10 @@ public class NetworkUtils {
 
     private static final String MOVIES_DB_BASE_URL = "https://api.themoviedb.org/3/movie/";
     private static final String MOVIES_DB_API_KEY  = ""; //TODO update with personal API key
-    public static final  String API_KEY_PARAM      = "?api_key=";
+    private static final String API_KEY_PARAM      = "?api_key=";
 
-    public static final String POPULAR_ENDPOINT = "popular";
+    public static final String POPULAR_ENDPOINT   = "popular";
+    public static final String TOP_RATED_ENDPOINT = "top_rated";
 
 
     /**

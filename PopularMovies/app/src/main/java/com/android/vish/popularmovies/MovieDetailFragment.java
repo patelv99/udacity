@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -32,15 +33,24 @@ public class MovieDetailFragment extends Fragment {
         mReleaseDate = view.findViewById(R.id.movie_detail_release_date);
         mAverageVote = view.findViewById(R.id.movie_detail_vote_average);
         mPlot = view.findViewById(R.id.movie_detail_plot);
-
+        setHasOptionsMenu(true);
         if (getArguments() != null) {
             mMovie = (Movie) getArguments().getSerializable(MOVIE_KEY);
             Picasso.with(getActivity()).load(mMovie.getImage()).into(mPoster);
             mTitle.setText(mMovie.getTitle());
-            mReleaseDate.setText(mMovie.getReleaseDate());
-            mAverageVote.setText(Integer.toString(mMovie.getAverageVote()));
+            mReleaseDate.setText(getString(R.string.release_date, mMovie.getReleaseDate()));
+            mAverageVote.setText(getString(R.string.rating, mMovie.getAverageVote()));
             mPlot.setText(mMovie.getPlot());
+            getActivity().setTitle(mMovie.getTitle());
+        } else {
+            getActivity().setTitle("");
         }
         return view;
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.spinner).setVisible(false);
+        super.onPrepareOptionsMenu(menu);
     }
 }
