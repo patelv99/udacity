@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="com.udacity.sandwichclub.DetailActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/image_iv"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/sandwich_picture_content_description"
+            android:scaleType="centerCrop"/>
+
+        <TextView
+            android:id="@+id/also_known_label_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/image_iv"
+            android:text="@string/detail_also_known_as_label"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/also_known_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/also_known_label_tv"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@id/also_known_label_tv"
+            android:layout_toRightOf="@id/also_known_label_tv"/>
+
+        <TextView
+            android:id="@+id/origin_label_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/also_known_tv"
+            android:text="@string/detail_place_of_origin_label"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/origin_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/origin_label_tv"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@id/origin_label_tv"
+            android:layout_toRightOf="@id/origin_label_tv"/>
+
+        <TextView
+            android:id="@+id/ingredients_label_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/origin_tv"
+            android:text="@string/detail_ingredients_label"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/ingredients_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/ingredients_label_tv"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@id/ingredients_label_tv"
+            android:layout_toRightOf="@id/ingredients_label_tv"/>
+
+        <TextView
+            android:id="@+id/description_label_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ingredients_tv"
+            android:text="@string/detail_description_label"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/description_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/description_label_tv"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@id/description_label_tv"
+            android:layout_toRightOf="@id/description_label_tv"/>
+    </RelativeLayout>
+</ScrollView>
