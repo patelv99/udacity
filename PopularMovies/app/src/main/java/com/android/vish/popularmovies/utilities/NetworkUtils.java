@@ -1,7 +1,9 @@
-package com.android.vish.popularmovies;
+package com.android.vish.popularmovies.utilities;
 
 import android.net.Uri;
 import android.util.Log;
+
+import com.android.vish.popularmovies.models.Movie;
 
 import org.json.JSONArray;
 import org.json.JSONException;

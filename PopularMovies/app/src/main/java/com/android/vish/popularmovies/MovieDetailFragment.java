@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.vish.popularmovies.models.Movie;
 import com.squareup.picasso.Picasso;
 
 public class MovieDetailFragment extends Fragment {

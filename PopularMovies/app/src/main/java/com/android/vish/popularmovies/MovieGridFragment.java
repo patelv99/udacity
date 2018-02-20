@@ -11,6 +11,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +20,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Spinner;
+
+import com.android.vish.popularmovies.adapters.MovieGridAdapter;
+import com.android.vish.popularmovies.models.Movie;
+import com.android.vish.popularmovies.utilities.NetworkUtils;
 
 import java.io.IOException;
 import java.net.URL;
@@ -133,7 +138,7 @@ public class MovieGridFragment extends Fragment {
             try {
                 moviesResponse = NetworkUtils.getResponseFromHttpUrl(moviesResponseUrl);
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(this.getClass().getSimpleName(), e.getMessage());
             }
             return moviesResponse;
         }

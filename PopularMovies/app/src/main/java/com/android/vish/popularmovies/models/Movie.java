@@ -1,4 +1,6 @@
-package com.android.vish.popularmovies;
+package com.android.vish.popularmovies.models;
+
+import android.util.Log;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -8,7 +10,7 @@ public class Movie implements Serializable {
 
     private static final String           MOVIE_IMAGE_BASE_URL = "http://image.tmdb.org/t/p/w500/";
     private static final SimpleDateFormat DISPLAY_DATE_FORMAT  = new SimpleDateFormat("MMM dd, yyyy");
-    private static final SimpleDateFormat MOVIE_DB_DATE_FORMAT = new SimpleDateFormat("YYYY-MM-dd");
+    private static final SimpleDateFormat MOVIE_DB_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     private int    mId;
     private String mImage;
@@ -19,7 +21,7 @@ public class Movie implements Serializable {
     private int    mPopularity;
 
     public Movie() {
-
+        // default constructor
     }
 
     public int getId() {
@@ -50,7 +52,7 @@ public class Movie implements Serializable {
         try {
             return DISPLAY_DATE_FORMAT.format(MOVIE_DB_DATE_FORMAT.parse(mReleaseDate));
         } catch (ParseException e) {
-            e.printStackTrace();
+            Log.e(this.getClass().getSimpleName(), e.getMessage());
             return mReleaseDate;
         }
     }
