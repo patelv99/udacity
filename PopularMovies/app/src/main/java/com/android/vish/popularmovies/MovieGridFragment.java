@@ -27,8 +27,8 @@ import java.util.List;
 
 public class MovieGridFragment extends Fragment {
 
-    protected ProgressDialog mProgressDialog;
-    private   GridView       mMovieGrid;
+    private ProgressDialog mProgressDialog;
+    private GridView       mMovieGrid;
     private List<Movie> mMovieList = new ArrayList<>();
 
     @Nullable
@@ -100,8 +100,9 @@ public class MovieGridFragment extends Fragment {
             mProgressDialog = new ProgressDialog(getContext());
             mProgressDialog.setIndeterminate(true);
             mProgressDialog.setCancelable(false);
-            mProgressDialog.show();
             mProgressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            mProgressDialog.show();
+            mProgressDialog.setContentView(getLayoutInflater().inflate(R.layout.progress_spinner, null));
         }
     }
 
