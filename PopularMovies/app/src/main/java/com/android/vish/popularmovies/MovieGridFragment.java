@@ -62,13 +62,13 @@ public class MovieGridFragment extends Fragment {
                 // position is the index of the item found in movie_sort_options
                 switch (position) {
                     case 0:
-                        new GetMoviesTask().execute(NetworkUtils.buildUrl(NetworkUtils.POPULAR_ENDPOINT));
+                        new GetMoviesTask().execute(NetworkUtils.buildGetMoviesUrl(NetworkUtils.POPULAR_ENDPOINT));
                         break;
                     case 1:
-                        new GetMoviesTask().execute(NetworkUtils.buildUrl(NetworkUtils.TOP_RATED_ENDPOINT));
+                        new GetMoviesTask().execute(NetworkUtils.buildGetMoviesUrl(NetworkUtils.TOP_RATED_ENDPOINT));
                         break;
                     default:
-                        new GetMoviesTask().execute(NetworkUtils.buildUrl(NetworkUtils.POPULAR_ENDPOINT));
+                        new GetMoviesTask().execute(NetworkUtils.buildGetMoviesUrl(NetworkUtils.POPULAR_ENDPOINT));
                 }
             }
 
