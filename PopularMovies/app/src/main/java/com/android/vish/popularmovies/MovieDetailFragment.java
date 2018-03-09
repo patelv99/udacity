@@ -1,8 +1,11 @@
 package com.android.vish.popularmovies;
 
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -35,9 +38,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieDetailFragment extends Fragment {
+public class MovieDetailFragment extends Fragment implements MovieTrailersAdapter.TrailerClickListener {
 
-    public static final String MOVIE_KEY = "movieKey";
+    public static final String MOVIE_KEY          = "movieKey";
+    public static final String YOUTUBE_PACKAGE_ID = "vnd.youtube:";
+    public static final String BASE_YOUTUBE_LINK  = "http://www.youtube.com/watch?v=";
 
     private ImageView    mPoster;
     private TextView     mTitle;
@@ -49,10 +54,11 @@ public class MovieDetailFragment extends Fragment {
     private TextView     mReviewsTitle;
     private RecyclerView mReviewsView;
 
-    private ProgressDialog    mProgressDialog;
-    private Movie             mMovie;
-    private List<MovieReview> mReviews;
-    private List<MovieVideos> mTrailers;
+    private ProgressDialog       mProgressDialog;
+    private MovieTrailersAdapter mMovieTrailersAdapter;
+    private Movie                mMovie;
+    private List<MovieReview>    mReviews;
+    private List<MovieVideos> mTrailers = new ArrayList<>();
 
     @Nullable
     @Override
@@ -67,6 +73,8 @@ public class MovieDetailFragment extends Fragment {
         mTrailersView = view.findViewById(R.id.movie_detail_trailers);
         mReviewsTitle = view.findViewById(R.id.movie_detail_reviews_title);
         mReviewsView = view.findViewById(R.id.movie_detail_reviews);
+        mMovieTrailersAdapter = new MovieTrailersAdapter(getContext(), mTrailers, this);
+        mTrailersView.setAdapter(mMovieTrailersAdapter);
 
         setHasOptionsMenu(true);
         if (getArguments() != null) {
@@ -115,6 +123,18 @@ public class MovieDetailFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onTrailerClick(int trailerIndex) {
+        MovieVideos trailer = mTrailers.get(trailerIndex);
+        try {
+            Intent youTubeIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(YOUTUBE_PACKAGE_ID + trailer.getKey()));
+            getActivity().startActivity(youTubeIntent);
+        } catch (ActivityNotFoundException exception) {
+            Intent webViewIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(BASE_YOUTUBE_LINK + trailer.getKey()));
+            getActivity().startActivity(webViewIntent);
+        }
+    }
+
     /**
      * Perform async call to fetch movie trailers
      */
@@ -149,7 +169,7 @@ public class MovieDetailFragment extends Fragment {
                     mTrailersView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
                     mTrailersView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
                     ViewCompat.setNestedScrollingEnabled(mReviewsView, false);
-                    mTrailersView.setAdapter(new MovieTrailersAdapter(getContext(), mTrailers));
+                    mMovieTrailersAdapter.updateTrailersList(mTrailers);
                 } else {
                     mTrailersTitle.setVisibility(View.GONE);
                     mTrailersView.setVisibility(View.GONE);
