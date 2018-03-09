@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.Spinner;
 
@@ -28,6 +29,7 @@ import com.android.vish.popularmovies.utilities.NetworkUtils;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MovieGridFragment extends Fragment {
@@ -55,7 +57,10 @@ public class MovieGridFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.movie_sort_menu, menu);
         Spinner spinner = (Spinner) menu.findItem(R.id.spinner).getActionView();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item,
+                                                          Arrays.asList(getResources().getStringArray(R.array.movie_sort_options)));
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -77,6 +82,8 @@ public class MovieGridFragment extends Fragment {
                 // do nothing
             }
         });
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
     }
 
     /**
