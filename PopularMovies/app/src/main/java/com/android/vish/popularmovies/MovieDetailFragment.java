@@ -19,7 +19,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -92,14 +91,7 @@ public class MovieDetailFragment extends Fragment implements MovieTrailersAdapte
         }
         return view;
     }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.spinner).setVisible(false);
-        super.onPrepareOptionsMenu(menu);
-    }
-
-
+    
     /**
      * Show the progress dialog spinner
      */
