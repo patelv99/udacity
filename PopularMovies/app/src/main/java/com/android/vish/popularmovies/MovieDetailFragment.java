@@ -2,7 +2,9 @@ package com.android.vish.popularmovies;
 
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -26,9 +28,11 @@ import android.widget.TextView;
 
 import com.android.vish.popularmovies.adapters.MovieReviewsAdapter;
 import com.android.vish.popularmovies.adapters.MovieTrailersAdapter;
+import com.android.vish.popularmovies.data.DbHelper;
+import com.android.vish.popularmovies.data.MovieContract;
 import com.android.vish.popularmovies.models.Movie;
 import com.android.vish.popularmovies.models.MovieReview;
-import com.android.vish.popularmovies.models.MovieVideos;
+import com.android.vish.popularmovies.models.MovieVideo;
 import com.android.vish.popularmovies.utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
@@ -48,6 +52,7 @@ public class MovieDetailFragment extends Fragment implements MovieTrailersAdapte
     private TextView     mReleaseDate;
     private TextView     mAverageVote;
     private TextView     mPlot;
+    private TextView     mFavorite;
     private TextView     mTrailersTitle;
     private RecyclerView mTrailersView;
     private TextView     mReviewsTitle;
@@ -57,7 +62,7 @@ public class MovieDetailFragment extends Fragment implements MovieTrailersAdapte
     private MovieTrailersAdapter mMovieTrailersAdapter;
     private Movie                mMovie;
     private List<MovieReview>    mReviews;
-    private List<MovieVideos> mTrailers = new ArrayList<>();
+    private List<MovieVideo> mTrailers = new ArrayList<>();
 
     @Nullable
     @Override
@@ -68,6 +73,7 @@ public class MovieDetailFragment extends Fragment implements MovieTrailersAdapte
         mReleaseDate = view.findViewById(R.id.movie_detail_release_date);
         mAverageVote = view.findViewById(R.id.movie_detail_vote_average);
         mPlot = view.findViewById(R.id.movie_detail_plot);
+        mFavorite = view.findViewById(R.id.movie_detail_favorite_text);
         mTrailersTitle = view.findViewById(R.id.movie_detail_trailers_title);
         mTrailersView = view.findViewById(R.id.movie_detail_trailers);
         mReviewsTitle = view.findViewById(R.id.movie_detail_reviews_title);
@@ -89,9 +95,72 @@ public class MovieDetailFragment extends Fragment implements MovieTrailersAdapte
         } else {
             getActivity().setTitle("");
         }
+
+        mFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                view.setSelected(!view.isSelected());
+                if (view.isSelected()) {
+                    saveFavoriteMovie();
+                } else {
+                    removeFavoriteMovie();
+                }
+            }
+        });
+
         return view;
     }
-    
+
+    /**
+     * Open the YouTube app to play the selected trailer video
+     * If YouTube not found, play in a Web View
+     *
+     * @param trailerIndex position of the {@link MovieVideo} in the list
+     */
+    @Override
+    public void onTrailerClick(int trailerIndex) {
+        MovieVideo trailer = mTrailers.get(trailerIndex);
+        try {
+            Intent youTubeIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(YOUTUBE_PACKAGE_ID + trailer.getKey()));
+            getActivity().startActivity(youTubeIntent);
+        } catch (ActivityNotFoundException exception) {
+            Intent webViewIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(BASE_YOUTUBE_LINK + trailer.getKey()));
+            getActivity().startActivity(webViewIntent);
+        }
+    }
+
+    /**
+     * Save the {@link Movie} in the local database
+     */
+    public void saveFavoriteMovie() {
+        SQLiteDatabase database = new DbHelper(getActivity()).getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(MovieContract.FavoriteEntry._ID, mMovie.getId());
+        values.put(MovieContract.FavoriteEntry.COLUMN_MOVIE_TITLE, mMovie.getTitle());
+        values.put(MovieContract.FavoriteEntry.COLUMN_MOVIE_POSTER, mMovie.getImage());
+        values.put(MovieContract.FavoriteEntry.COLUMN_MOVIE_RELEASE_DATE, mMovie.getReleaseDate());
+        values.put(MovieContract.FavoriteEntry.COLUMN_MOVIE_RATING, mMovie.getAverageVote());
+        values.put(MovieContract.FavoriteEntry.COLUMN_MOVIE_PLOT, mMovie.getPlot());
+        long result = database.insert(MovieContract.FavoriteEntry.TABLE_NAME, null, values);
+        if (result > -1) {
+            Log.i(this.getClass().getSimpleName(), "Movie Inserted");
+        }
+    }
+
+    /**
+     * Remove the {@link Movie} from the local database
+     *
+     * @return true if {@link Movie} was deleted
+     */
+    public boolean removeFavoriteMovie() {
+        SQLiteDatabase database = new DbHelper(getActivity()).getWritableDatabase();
+        boolean result = database.delete(MovieContract.FavoriteEntry.TABLE_NAME, MovieContract.FavoriteEntry._ID + "=" + mMovie.getId(), null) > 0;
+        if (result) {
+            Log.i(this.getClass().getSimpleName(), "Movie Deleted");
+        }
+        return result;
+    }
+
     /**
      * Show the progress dialog spinner
      */
@@ -112,18 +181,6 @@ public class MovieDetailFragment extends Fragment implements MovieTrailersAdapte
     protected void dismissProgressDialog() {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
-        }
-    }
-
-    @Override
-    public void onTrailerClick(int trailerIndex) {
-        MovieVideos trailer = mTrailers.get(trailerIndex);
-        try {
-            Intent youTubeIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(YOUTUBE_PACKAGE_ID + trailer.getKey()));
-            getActivity().startActivity(youTubeIntent);
-        } catch (ActivityNotFoundException exception) {
-            Intent webViewIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(BASE_YOUTUBE_LINK + trailer.getKey()));
-            getActivity().startActivity(webViewIntent);
         }
     }
 

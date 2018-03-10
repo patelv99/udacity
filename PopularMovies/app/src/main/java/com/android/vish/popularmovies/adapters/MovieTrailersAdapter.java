@@ -5,19 +5,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.vish.popularmovies.R;
-import com.android.vish.popularmovies.models.MovieVideos;
+import com.android.vish.popularmovies.models.MovieVideo;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdapter.MovieTrailerViewHolder> {
 
-    private Context           mContext;
-    private List<MovieVideos> mMovieTrailers;
+    private Context                    mContext;
+    private List<MovieVideo>           mMovieTrailers;
     final private TrailerClickListener mClickListener;
 
     public interface TrailerClickListener {
@@ -25,13 +24,13 @@ public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdap
         void onTrailerClick(int trailerIndex);
     }
 
-    public MovieTrailersAdapter(Context context, List<MovieVideos> trailers, TrailerClickListener listener) {
+    public MovieTrailersAdapter(Context context, List<MovieVideo> trailers, TrailerClickListener listener) {
         mContext = context;
         mMovieTrailers = new ArrayList<>(trailers);
         mClickListener = listener;
     }
 
-    public void updateTrailersList(List<MovieVideos> trailers) {
+    public void updateTrailersList(List<MovieVideo> trailers) {
         mMovieTrailers = new ArrayList<>(trailers);
         notifyDataSetChanged();
     }

@@ -2,7 +2,7 @@ package com.android.vish.popularmovies.models;
 
 import java.io.Serializable;
 
-public class MovieVideos implements Serializable {
+public class MovieVideo implements Serializable {
 
     private String    mId;
     private String mKey;
