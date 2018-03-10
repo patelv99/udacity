@@ -15,21 +15,26 @@ import java.util.List;
 public class MovieGridAdapter extends BaseAdapter {
 
     private Context     mContext;
-    private List<Movie> mMoviePosters;
+    private List<Movie> mMovies;
 
     public MovieGridAdapter(Context context, List<Movie> moviePosters) {
         mContext = context;
-        mMoviePosters = new ArrayList<>(moviePosters);
+        mMovies = new ArrayList<>(moviePosters);
+    }
+
+    public void updateMovies(List<Movie> movies) {
+        mMovies = new ArrayList<>(movies);
+        notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        return mMoviePosters.size();
+        return mMovies.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mMoviePosters.get(position);
+        return mMovies.get(position);
     }
 
     @Override
@@ -45,7 +50,7 @@ public class MovieGridAdapter extends BaseAdapter {
         } else {
             imageView = (ImageView) convertView;
         }
-        Picasso.with(mContext).load(mMoviePosters.get(position).getImage()).into(imageView);
+        Picasso.with(mContext).load((Movie.MOVIE_IMAGE_BASE_URL + mMovies.get(position).getImage())).into(imageView);
         return imageView;
     }
 }

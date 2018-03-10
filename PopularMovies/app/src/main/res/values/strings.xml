@@ -8,6 +8,8 @@
     <string name="rating">Rating: %1$d\/10</string>
     <string name="trailers">Movie Trailers</string>
     <string name="reviews">User Reviews</string>
+    <string name="added_to_favorites">%1$s has been added to Favorites</string>
+    <string name="removed_from_favorites">%1$s has been removed from Favorites</string>
 
     <string-array name="movie_sort_options">
         <item>Most Popular</item>

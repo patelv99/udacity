@@ -1,6 +1,7 @@
 package com.android.vish.popularmovies;
 
 import android.app.ProgressDialog;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
@@ -23,6 +24,7 @@ import android.widget.GridView;
 import android.widget.Spinner;
 
 import com.android.vish.popularmovies.adapters.MovieGridAdapter;
+import com.android.vish.popularmovies.data.MovieContract;
 import com.android.vish.popularmovies.models.Movie;
 import com.android.vish.popularmovies.utilities.NetworkUtils;
 
@@ -37,6 +39,8 @@ public class MovieGridFragment extends Fragment {
     private ProgressDialog mProgressDialog;
     private GridView       mMovieGrid;
     private List<Movie> mMovieList = new ArrayList<>();
+    private MovieGridAdapter mMovieGridAdapter;
+    private Cursor           mCursor;
 
     @Nullable
     @Override
@@ -51,6 +55,8 @@ public class MovieGridFragment extends Fragment {
         });
         setHasOptionsMenu(true);
         getActivity().setTitle(getString(R.string.movies));
+        mMovieGridAdapter = new MovieGridAdapter(getActivity(), mMovieList);
+        mMovieGrid.setAdapter(mMovieGridAdapter);
         return view;
     }
 
@@ -72,6 +78,9 @@ public class MovieGridFragment extends Fragment {
                     case 1:
                         new GetMoviesTask().execute(NetworkUtils.buildGetMoviesUrl(NetworkUtils.TOP_RATED_ENDPOINT));
                         break;
+                    case 2:
+                        new GetAllFavoriteMoviesTask().execute();
+                        break;
                     default:
                         new GetMoviesTask().execute(NetworkUtils.buildGetMoviesUrl(NetworkUtils.POPULAR_ENDPOINT));
                 }
@@ -84,6 +93,30 @@ public class MovieGridFragment extends Fragment {
         });
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mCursor.close();
+    }
+
+    public void addMovies() {
+        if (mCursor != null) {
+            mMovieList.clear();
+            mCursor.moveToFirst();
+            while (mCursor.moveToNext()) {
+                Movie movie = new Movie();
+                movie.setId(mCursor.getInt(mCursor.getColumnIndex(MovieContract.FavoriteEntry._ID)));
+                movie.setImage(mCursor.getString(mCursor.getColumnIndex(MovieContract.FavoriteEntry.COLUMN_MOVIE_POSTER)));
+                movie.setTitle(mCursor.getString(mCursor.getColumnIndex(MovieContract.FavoriteEntry.COLUMN_MOVIE_TITLE)));
+                movie.setReleaseDate(mCursor.getString(mCursor.getColumnIndex(MovieContract.FavoriteEntry.COLUMN_MOVIE_RELEASE_DATE)));
+                movie.setAverageVote(mCursor.getInt(mCursor.getColumnIndex(MovieContract.FavoriteEntry.COLUMN_MOVIE_RATING)));
+                movie.setPlot(mCursor.getString(mCursor.getColumnIndex(MovieContract.FavoriteEntry.COLUMN_MOVIE_PLOT)));
+                mMovieList.add(movie);
+            }
+        }
+        mMovieGridAdapter.updateMovies(mMovieList);
     }
 
     /**
@@ -155,9 +188,36 @@ public class MovieGridFragment extends Fragment {
             dismissProgressDialog();
             if (!TextUtils.isEmpty(popularMoviesResult)) {
                 mMovieList = new ArrayList<>(NetworkUtils.parseMoviesJson(popularMoviesResult));
-                mMovieGrid.setAdapter(new MovieGridAdapter(getActivity(), mMovieList));
+                mMovieGridAdapter.updateMovies(mMovieList);
             } else {
                 Snackbar.make(mMovieGrid, getString(R.string.network_error), Snackbar.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    /**
+     * Perform async call to fetch all favorite movies
+     */
+    public class GetAllFavoriteMoviesTask extends AsyncTask<Void, Void, Cursor> {
+
+        @Override
+        protected Cursor doInBackground(Void... voids) {
+            Cursor cursor;
+            try {
+                cursor = getActivity().getContentResolver().query(MovieContract.FavoriteEntry.CONTENT_URI,
+                                                                  null, null, null, null);
+            } catch (Exception exception) {
+                Log.e(MovieDetailFragment.class.getSimpleName(), "Failed to load data");
+                return null;
+            }
+            return cursor;
+        }
+
+        @Override
+        protected void onPostExecute(Cursor cursor) {
+            if (cursor != null) {
+                mCursor = cursor;
+                addMovies();
             }
         }
     }

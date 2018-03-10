@@ -4,7 +4,7 @@ import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -28,7 +28,6 @@ import android.widget.TextView;
 
 import com.android.vish.popularmovies.adapters.MovieReviewsAdapter;
 import com.android.vish.popularmovies.adapters.MovieTrailersAdapter;
-import com.android.vish.popularmovies.data.DbHelper;
 import com.android.vish.popularmovies.data.MovieContract;
 import com.android.vish.popularmovies.models.Movie;
 import com.android.vish.popularmovies.models.MovieReview;
@@ -61,7 +60,6 @@ public class MovieDetailFragment extends Fragment implements MovieTrailersAdapte
     private ProgressDialog       mProgressDialog;
     private MovieTrailersAdapter mMovieTrailersAdapter;
     private Movie                mMovie;
-    private List<MovieReview>    mReviews;
     private List<MovieVideo> mTrailers = new ArrayList<>();
 
     @Nullable
@@ -84,7 +82,7 @@ public class MovieDetailFragment extends Fragment implements MovieTrailersAdapte
         setHasOptionsMenu(true);
         if (getArguments() != null) {
             mMovie = (Movie) getArguments().getSerializable(MOVIE_KEY);
-            Picasso.with(getActivity()).load(mMovie.getImage()).into(mPoster);
+            Picasso.with(getActivity()).load((Movie.MOVIE_IMAGE_BASE_URL + mMovie.getImage())).into(mPoster);
             mTitle.setText(mMovie.getTitle());
             mReleaseDate.setText(getString(R.string.release_date, mMovie.getReleaseDate()));
             mAverageVote.setText(getString(R.string.rating, mMovie.getAverageVote()));
@@ -92,6 +90,7 @@ public class MovieDetailFragment extends Fragment implements MovieTrailersAdapte
             getActivity().setTitle(mMovie.getTitle());
             new GetMovieReviewsTask().execute(NetworkUtils.buildMovieIdUrl(mMovie.getId(), NetworkUtils.REVIEWS_ENDPOINT));
             new GetMovieTrailersTask().execute(NetworkUtils.buildMovieIdUrl(mMovie.getId(), NetworkUtils.VIDEOS_ENDPOINT));
+            new GetFavoriteMovieTask().execute(MovieContract.FavoriteEntry.CONTENT_URI.buildUpon().appendPath(Integer.toString(mMovie.getId())).build());
         } else {
             getActivity().setTitle("");
         }
@@ -133,7 +132,6 @@ public class MovieDetailFragment extends Fragment implements MovieTrailersAdapte
      * Save the {@link Movie} in the local database
      */
     public void saveFavoriteMovie() {
-        SQLiteDatabase database = new DbHelper(getActivity()).getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(MovieContract.FavoriteEntry._ID, mMovie.getId());
         values.put(MovieContract.FavoriteEntry.COLUMN_MOVIE_TITLE, mMovie.getTitle());
@@ -141,24 +139,21 @@ public class MovieDetailFragment extends Fragment implements MovieTrailersAdapte
         values.put(MovieContract.FavoriteEntry.COLUMN_MOVIE_RELEASE_DATE, mMovie.getReleaseDate());
         values.put(MovieContract.FavoriteEntry.COLUMN_MOVIE_RATING, mMovie.getAverageVote());
         values.put(MovieContract.FavoriteEntry.COLUMN_MOVIE_PLOT, mMovie.getPlot());
-        long result = database.insert(MovieContract.FavoriteEntry.TABLE_NAME, null, values);
-        if (result > -1) {
-            Log.i(this.getClass().getSimpleName(), "Movie Inserted");
+        Uri uri = getActivity().getContentResolver().insert(MovieContract.FavoriteEntry.CONTENT_URI, values);
+        if (uri != null) {
+            Snackbar.make(mTitle, getString(R.string.added_to_favorites, mMovie.getTitle()), Snackbar.LENGTH_SHORT).show();
         }
     }
 
     /**
      * Remove the {@link Movie} from the local database
-     *
-     * @return true if {@link Movie} was deleted
      */
-    public boolean removeFavoriteMovie() {
-        SQLiteDatabase database = new DbHelper(getActivity()).getWritableDatabase();
-        boolean result = database.delete(MovieContract.FavoriteEntry.TABLE_NAME, MovieContract.FavoriteEntry._ID + "=" + mMovie.getId(), null) > 0;
-        if (result) {
-            Log.i(this.getClass().getSimpleName(), "Movie Deleted");
+    public void removeFavoriteMovie() {
+        Uri uri = MovieContract.FavoriteEntry.CONTENT_URI.buildUpon().appendPath(Integer.toString(mMovie.getId())).build();
+        int moviesDeleted = getActivity().getContentResolver().delete(uri, null, null);
+        if (moviesDeleted > -1) {
+            Snackbar.make(mTitle, getString(R.string.removed_from_favorites, mMovie.getTitle()), Snackbar.LENGTH_SHORT).show();
         }
-        return result;
     }
 
     /**
@@ -256,20 +251,52 @@ public class MovieDetailFragment extends Fragment implements MovieTrailersAdapte
         protected void onPostExecute(String movieReviewsResult) {
             dismissProgressDialog();
             if (!TextUtils.isEmpty(movieReviewsResult)) {
-                mReviews = new ArrayList<>(NetworkUtils.parseMovieReviewsJson(movieReviewsResult));
-                if (!mReviews.isEmpty()) {
+                List<MovieReview> reviews = new ArrayList<>(NetworkUtils.parseMovieReviewsJson(movieReviewsResult));
+                if (!reviews.isEmpty()) {
                     mReviewsTitle.setVisibility(View.VISIBLE);
                     mReviewsView.setVisibility(View.VISIBLE);
                     mReviewsView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
                     mReviewsView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
                     ViewCompat.setNestedScrollingEnabled(mReviewsView, false);
-                    mReviewsView.setAdapter(new MovieReviewsAdapter(getContext(), mReviews));
+                    mReviewsView.setAdapter(new MovieReviewsAdapter(getContext(), reviews));
                 } else {
                     mReviewsTitle.setVisibility(View.GONE);
                     mReviewsView.setVisibility(View.GONE);
                 }
             } else {
                 Snackbar.make(mTitle, getString(R.string.network_error), Snackbar.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    /**
+     * Perform async call to fetch if movie was favorited
+     */
+    public class GetFavoriteMovieTask extends AsyncTask<Uri, Void, Cursor> {
+
+        @Override
+        protected Cursor doInBackground(Uri... uris) {
+            Cursor cursor;
+            try {
+                cursor = getActivity().getContentResolver().query(uris[0], null, null, null, null);
+            } catch (Exception exception) {
+                Log.e(MovieDetailFragment.class.getSimpleName(), "Failed to load data");
+                return null;
+            }
+            return cursor;
+        }
+
+        @Override
+        protected void onPostExecute(Cursor cursor) {
+            if (cursor != null) {
+                cursor.moveToFirst();
+                try {
+                    if (cursor.getInt(cursor.getColumnIndex(MovieContract.FavoriteEntry._ID)) == mMovie.getId()) {
+                        mFavorite.setSelected(true);
+                    }
+                } catch (Exception exception) {
+                    Log.e(MovieDetailFragment.class.getSimpleName(), "Movie not found in database");
+                }
             }
         }
     }

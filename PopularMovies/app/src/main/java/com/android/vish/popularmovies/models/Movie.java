@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat;
 
 public class Movie implements Serializable {
 
-    private static final String           MOVIE_IMAGE_BASE_URL = "http://image.tmdb.org/t/p/w500/";
+    public static final  String           MOVIE_IMAGE_BASE_URL = "http://image.tmdb.org/t/p/w500/";
     private static final SimpleDateFormat DISPLAY_DATE_FORMAT  = new SimpleDateFormat("MMM dd, yyyy");
     private static final SimpleDateFormat MOVIE_DB_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -33,7 +33,7 @@ public class Movie implements Serializable {
     }
 
     public String getImage() {
-        return MOVIE_IMAGE_BASE_URL + mImage;
+        return mImage;
     }
 
     public void setImage(String image) {

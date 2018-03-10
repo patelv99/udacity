@@ -18,6 +18,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <provider
+            android:name=".data.MovieContentProvider"
+            android:authorities="com.android.vish.popularmovies"
+            android:exported="false"/>
     </application>
 
 </manifest>

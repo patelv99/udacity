@@ -3,11 +3,6 @@ package com.android.vish.popularmovies;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-
-import java.util.Arrays;
 
 public class MovieActivity extends AppCompatActivity {
 
