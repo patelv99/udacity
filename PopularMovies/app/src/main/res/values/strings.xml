@@ -2,6 +2,7 @@
     <string name="app_name">Popular Movies</string>
 
     <string name="movies">Movies</string>
+    <string name="favorite">Favorite</string>
     <string name="network_error">A network error occurred. Please try again.</string>
     <string name="release_date">Released: %1$s</string>
     <string name="rating">Rating: %1$d\/10</string>
@@ -11,5 +12,6 @@
     <string-array name="movie_sort_options">
         <item>Most Popular</item>
         <item>Top Rated</item>
+        <item>Favorites</item>
     </string-array>
 </resources>
