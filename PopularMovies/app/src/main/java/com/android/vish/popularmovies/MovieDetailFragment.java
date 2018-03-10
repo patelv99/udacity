@@ -210,10 +210,10 @@ public class MovieDetailFragment extends Fragment implements MovieTrailersAdapte
                 if (!mTrailers.isEmpty()) {
                     mTrailersTitle.setVisibility(View.VISIBLE);
                     mTrailersView.setVisibility(View.VISIBLE);
+                    mMovieTrailersAdapter.updateTrailersList(mTrailers);
                     mTrailersView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
                     mTrailersView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
-                    ViewCompat.setNestedScrollingEnabled(mReviewsView, false);
-                    mMovieTrailersAdapter.updateTrailersList(mTrailers);
+                    ViewCompat.setNestedScrollingEnabled(mTrailersView, false);
                 } else {
                     mTrailersTitle.setVisibility(View.GONE);
                     mTrailersView.setVisibility(View.GONE);
@@ -255,10 +255,10 @@ public class MovieDetailFragment extends Fragment implements MovieTrailersAdapte
                 if (!reviews.isEmpty()) {
                     mReviewsTitle.setVisibility(View.VISIBLE);
                     mReviewsView.setVisibility(View.VISIBLE);
+                    mReviewsView.setAdapter(new MovieReviewsAdapter(getContext(), reviews));
                     mReviewsView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
                     mReviewsView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
-                    ViewCompat.setNestedScrollingEnabled(mReviewsView, false);
-                    mReviewsView.setAdapter(new MovieReviewsAdapter(getContext(), reviews));
+                    ViewCompat.setNestedScrollingEnabled(mReviewsView, true);
                 } else {
                     mReviewsTitle.setVisibility(View.GONE);
                     mReviewsView.setVisibility(View.GONE);
