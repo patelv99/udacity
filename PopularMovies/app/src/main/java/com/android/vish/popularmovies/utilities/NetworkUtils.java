@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.android.vish.popularmovies.models.Movie;
 import com.android.vish.popularmovies.models.MovieReview;
-import com.android.vish.popularmovies.models.MovieVideos;
+import com.android.vish.popularmovies.models.MovieVideo;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -154,19 +154,19 @@ public class NetworkUtils {
     }
 
     /**
-     * Parse the given json String in to a {@link List<MovieVideos>}
+     * Parse the given json String in to a {@link List< MovieVideo >}
      *
      * @param reviewJson json string
-     * @return {@link List<MovieVideos>}
+     * @return {@link List< MovieVideo >}
      */
-    public static List<MovieVideos> parseMovieVideosJson(String reviewJson) {
-        List<MovieVideos> trailers = new ArrayList<>();
+    public static List<MovieVideo> parseMovieVideosJson(String reviewJson) {
+        List<MovieVideo> trailers = new ArrayList<>();
         try {
             JSONObject moviesJsonObject = new JSONObject(reviewJson);
             JSONArray results = moviesJsonObject.getJSONArray("results");
 
             for (int i = 0; i < results.length(); i++) {
-                MovieVideos videos = new MovieVideos();
+                MovieVideo videos = new MovieVideo();
                 videos.setId(results.getJSONObject(i).getString("id"));
                 videos.setKey(results.getJSONObject(i).getString("key"));
                 videos.setName(results.getJSONObject(i).getString("name"));
