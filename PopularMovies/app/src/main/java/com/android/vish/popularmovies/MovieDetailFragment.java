@@ -258,7 +258,7 @@ public class MovieDetailFragment extends Fragment implements MovieTrailersAdapte
                     mReviewsView.setAdapter(new MovieReviewsAdapter(getContext(), reviews));
                     mReviewsView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
                     mReviewsView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
-                    ViewCompat.setNestedScrollingEnabled(mReviewsView, true);
+                    ViewCompat.setNestedScrollingEnabled(mReviewsView, false);
                 } else {
                     mReviewsTitle.setVisibility(View.GONE);
                     mReviewsView.setVisibility(View.GONE);

@@ -98,7 +98,9 @@ public class MovieGridFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mCursor.close();
+        if (mCursor != null) {
+            mCursor.close();
+        }
     }
 
     public void addMovies() {
