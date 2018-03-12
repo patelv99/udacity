@@ -209,7 +209,7 @@ public class MovieGridFragment extends Fragment {
                 cursor = getActivity().getContentResolver().query(MovieContract.FavoriteEntry.CONTENT_URI,
                                                                   null, null, null, null);
             } catch (Exception exception) {
-                Log.e(MovieDetailFragment.class.getSimpleName(), "Failed to load data");
+                Log.e(MovieDetailFragment.class.getSimpleName(), getString(R.string.failed_to_load_data));
                 return null;
             }
             return cursor;

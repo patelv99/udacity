@@ -11,6 +11,10 @@
     <string name="added_to_favorites">%1$s has been added to Favorites</string>
     <string name="removed_from_favorites">%1$s has been removed from Favorites</string>
 
+    <!-- Log Strings -->
+    <string name="movie_not_found" translatable="false">Movie not found in database</string>
+    <string name="failed_to_load_data" translatable="false">Failed to load data</string>
+
     <string-array name="movie_sort_options">
         <item>Most Popular</item>
         <item>Top Rated</item>

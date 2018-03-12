@@ -280,7 +280,7 @@ public class MovieDetailFragment extends Fragment implements MovieTrailersAdapte
             try {
                 cursor = getActivity().getContentResolver().query(uris[0], null, null, null, null);
             } catch (Exception exception) {
-                Log.e(MovieDetailFragment.class.getSimpleName(), "Failed to load data");
+                Log.e(MovieDetailFragment.class.getSimpleName(), getString(R.string.failed_to_load_data));
                 return null;
             }
             return cursor;
@@ -295,7 +295,7 @@ public class MovieDetailFragment extends Fragment implements MovieTrailersAdapte
                         mFavorite.setSelected(true);
                     }
                 } catch (Exception exception) {
-                    Log.e(MovieDetailFragment.class.getSimpleName(), "Movie not found in database");
+                    Log.e(MovieDetailFragment.class.getSimpleName(), getString(R.string.movie_not_found));
                 }
             }
         }
