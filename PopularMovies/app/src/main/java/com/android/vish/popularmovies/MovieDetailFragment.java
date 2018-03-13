@@ -42,7 +42,6 @@ import java.util.List;
 
 public class MovieDetailFragment extends Fragment implements MovieTrailersAdapter.TrailerClickListener {
 
-    public static final String MOVIE_KEY          = "movieKey";
     public static final String YOUTUBE_PACKAGE_ID = "vnd.youtube:";
     public static final String BASE_YOUTUBE_LINK  = "http://www.youtube.com/watch?v=";
 
@@ -81,7 +80,7 @@ public class MovieDetailFragment extends Fragment implements MovieTrailersAdapte
 
         setHasOptionsMenu(true);
         if (getArguments() != null) {
-            mMovie = (Movie) getArguments().getSerializable(MOVIE_KEY);
+            mMovie = (Movie) getArguments().getSerializable(MovieActivity.MOVIE_KEY);
             Picasso.with(getActivity()).load((Movie.MOVIE_IMAGE_BASE_URL + mMovie.getImage())).into(mPoster);
             mTitle.setText(mMovie.getTitle());
             mReleaseDate.setText(getString(R.string.release_date, mMovie.getReleaseDate()));
@@ -108,6 +107,13 @@ public class MovieDetailFragment extends Fragment implements MovieTrailersAdapte
         });
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MovieActivity.sCurrentFrag = this.getClass().getSimpleName();
+        MovieActivity.sMovie = mMovie;
     }
 
     /**

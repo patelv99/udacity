@@ -41,6 +41,7 @@ public class MovieGridFragment extends Fragment {
     private List<Movie> mMovieList = new ArrayList<>();
     private MovieGridAdapter mMovieGridAdapter;
     private Cursor           mCursor;
+    private int              mSortIndex;
 
     @Nullable
     @Override
@@ -53,6 +54,9 @@ public class MovieGridFragment extends Fragment {
                 onMovieClick(position);
             }
         });
+        if (getArguments() != null) {
+            mSortIndex = getArguments().getInt(MovieActivity.SORT_INDEX_KEY);
+        }
         setHasOptionsMenu(true);
         getActivity().setTitle(getString(R.string.movies));
         mMovieGridAdapter = new MovieGridAdapter(getActivity(), mMovieList);
@@ -61,8 +65,13 @@ public class MovieGridFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        MovieActivity.sCurrentFrag = this.getClass().getSimpleName();
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.movie_sort_menu, menu);
         Spinner spinner = (Spinner) menu.findItem(R.id.spinner).getActionView();
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item,
@@ -74,12 +83,15 @@ public class MovieGridFragment extends Fragment {
                 switch (position) {
                     case 0:
                         new GetMoviesTask().execute(NetworkUtils.buildGetMoviesUrl(NetworkUtils.POPULAR_ENDPOINT));
+                        MovieActivity.sSortIndex = 0;
                         break;
                     case 1:
                         new GetMoviesTask().execute(NetworkUtils.buildGetMoviesUrl(NetworkUtils.TOP_RATED_ENDPOINT));
+                        MovieActivity.sSortIndex = 1;
                         break;
                     case 2:
                         new GetAllFavoriteMoviesTask().execute();
+                        MovieActivity.sSortIndex = 2;
                         break;
                     default:
                         new GetMoviesTask().execute(NetworkUtils.buildGetMoviesUrl(NetworkUtils.POPULAR_ENDPOINT));
@@ -93,6 +105,8 @@ public class MovieGridFragment extends Fragment {
         });
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+        spinner.setSelection(mSortIndex);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -128,7 +142,7 @@ public class MovieGridFragment extends Fragment {
      */
     public void onMovieClick(int position) {
         Bundle bundle = new Bundle();
-        bundle.putSerializable(MovieDetailFragment.MOVIE_KEY, mMovieList.get(position));
+        bundle.putSerializable(MovieActivity.MOVIE_KEY, mMovieList.get(position));
         MovieDetailFragment movieDetailFragment = new MovieDetailFragment();
         movieDetailFragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction()
