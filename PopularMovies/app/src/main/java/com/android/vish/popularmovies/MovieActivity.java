@@ -9,13 +9,15 @@ import com.android.vish.popularmovies.models.Movie;
 
 public class MovieActivity extends AppCompatActivity {
 
-    public static final String FRAGMENT_KEY   = "fragmentKey";
-    public static final String SORT_INDEX_KEY = "sortIndexKey";
-    public static final String MOVIE_KEY      = "movieKey";
+    public static final String FRAGMENT_KEY     = "fragmentKey";
+    public static final String SORT_INDEX_KEY   = "sortIndexKey";
+    public static final String MOVIE_KEY        = "movieKey";
+    public static final String SCROLL_INDEX_KEY = "scrollIndexKey";
 
     public static String sCurrentFrag = "";
     public static int   sSortIndex;
     public static Movie sMovie;
+    public static int   sScrollIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,13 +27,13 @@ public class MovieActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             sCurrentFrag = savedInstanceState.getString(FRAGMENT_KEY);
             sSortIndex = savedInstanceState.getInt(SORT_INDEX_KEY);
+            sMovie = (Movie) savedInstanceState.getSerializable(MOVIE_KEY);
+            sScrollIndex = savedInstanceState.getInt(SCROLL_INDEX_KEY);
         }
         Bundle bundle = new Bundle();
         Fragment openFragment;
         if (sCurrentFrag.equals(MovieGridFragment.class.getSimpleName())) {
-            bundle.putInt(SORT_INDEX_KEY, sSortIndex);
             openFragment = new MovieGridFragment();
-            openFragment.setArguments(bundle);
         } else if (sCurrentFrag.equals(MovieDetailFragment.class.getSimpleName())) {
             bundle.putSerializable(MOVIE_KEY, sMovie);
             openFragment = new MovieDetailFragment();
@@ -51,5 +53,6 @@ public class MovieActivity extends AppCompatActivity {
         outState.putString(FRAGMENT_KEY, sCurrentFrag);
         outState.putInt(SORT_INDEX_KEY, sSortIndex);
         outState.putSerializable(MOVIE_KEY, sMovie);
+        outState.putInt(SCROLL_INDEX_KEY, sScrollIndex);
     }
 }

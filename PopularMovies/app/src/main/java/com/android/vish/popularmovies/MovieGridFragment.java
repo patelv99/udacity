@@ -41,7 +41,6 @@ public class MovieGridFragment extends Fragment {
     private List<Movie> mMovieList = new ArrayList<>();
     private MovieGridAdapter mMovieGridAdapter;
     private Cursor           mCursor;
-    private int              mSortIndex;
 
     @Nullable
     @Override
@@ -54,9 +53,6 @@ public class MovieGridFragment extends Fragment {
                 onMovieClick(position);
             }
         });
-        if (getArguments() != null) {
-            mSortIndex = getArguments().getInt(MovieActivity.SORT_INDEX_KEY);
-        }
         setHasOptionsMenu(true);
         getActivity().setTitle(getString(R.string.movies));
         mMovieGridAdapter = new MovieGridAdapter(getActivity(), mMovieList);
@@ -68,6 +64,7 @@ public class MovieGridFragment extends Fragment {
     public void onResume() {
         super.onResume();
         MovieActivity.sCurrentFrag = this.getClass().getSimpleName();
+        mMovieGrid.smoothScrollToPosition(MovieActivity.sScrollIndex);
     }
 
     @Override
@@ -105,8 +102,14 @@ public class MovieGridFragment extends Fragment {
         });
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-        spinner.setSelection(mSortIndex);
+        spinner.setSelection(MovieActivity.sSortIndex);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        MovieActivity.sScrollIndex = mMovieGrid.getFirstVisiblePosition();
     }
 
     @Override
@@ -205,6 +208,7 @@ public class MovieGridFragment extends Fragment {
             if (!TextUtils.isEmpty(popularMoviesResult)) {
                 mMovieList = new ArrayList<>(NetworkUtils.parseMoviesJson(popularMoviesResult));
                 mMovieGridAdapter.updateMovies(mMovieList);
+                mMovieGrid.smoothScrollToPosition(MovieActivity.sScrollIndex);
             } else {
                 Snackbar.make(mMovieGrid, getString(R.string.network_error), Snackbar.LENGTH_SHORT).show();
             }
