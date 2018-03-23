@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Margins/Paddings -->
+    <dimen name="layout_side_padding">16dp</dimen>
+
+</resources>
