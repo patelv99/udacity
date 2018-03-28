@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.android.vish.bakenow.R;
-import com.android.vish.bakenow.models.Recipe;
 import com.android.vish.bakenow.models.RecipeStep;
 
 import java.util.ArrayList;
@@ -28,17 +27,21 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
         mSteps = new ArrayList<>(steps);
     }
 
+    public void updateSteps(List<RecipeStep> steps) {
+        mSteps = new ArrayList<>(steps);
+    }
+
     @NonNull
     @Override
     public RecipeStepsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        View itemView = inflater.inflate(R.layout.item_recipe, parent, false);
+        View itemView = inflater.inflate(R.layout.item_recipe_step, parent, false);
         return new RecipeStepsViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecipeStepsViewHolder holder, int position) {
-
+        holder.mRecipeStep.setText(mSteps.get(position).getShortDescription());
     }
 
     @Override
@@ -48,7 +51,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
 
     protected class RecipeStepsViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.item_recipe_title) protected TextView mRecipeTitle;
+        @BindView(R.id.item_recipe_step_title) protected TextView mRecipeStep;
 
         public RecipeStepsViewHolder(View itemView) {
             super(itemView);

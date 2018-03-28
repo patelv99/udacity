@@ -31,6 +31,7 @@
         app:layout_constraintTop_toBottomOf="@id/fragment_recipe_detail_ingredients_header"/>
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/fragment_recipe_detail_steps_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/layout_side_padding"

@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Bake Now</string>
 
+    <string name="network_error">A network error occurred. Please try again.</string>
+
     <string name="ingredients">Ingredients</string>
     <string name="step_number">Step %1$d</string>
 </resources>

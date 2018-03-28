@@ -16,19 +16,28 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.RecipeItemViewHolder> {
 
-    private Context      mContext;
-    private List<Recipe> mRecipes;
+    private Context                mContext;
+    private List<Recipe>           mRecipes;
+    private RecipeListItemListener mRecipeListItemListener;
 
-    public RecipeListAdapter(Context context, List<Recipe> recipes) {
+    public RecipeListAdapter(Context context, List<Recipe> recipes, RecipeListItemListener recipeListItemListener) {
         mContext = context;
         mRecipes = new ArrayList<>(recipes);
+        mRecipeListItemListener = recipeListItemListener;
+    }
+
+    public interface RecipeListItemListener {
+
+        void onRecipeClick(Recipe recipe);
     }
 
     public void updateRecipes(List<Recipe> recipes) {
         mRecipes = new ArrayList<>(recipes);
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -56,6 +65,11 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         public RecipeItemViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        @OnClick(R.id.item_recipe_card)
+        public void onRecipeClick() {
+            mRecipeListItemListener.onRecipeClick(mRecipes.get(getAdapterPosition()));
         }
     }
 }
