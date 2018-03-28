@@ -31,4 +31,24 @@ public class RecipeStep implements Serializable {
     public String getThumbnailUrl() {
         return mThumbnailUrl;
     }
+
+    public void setId(int id) {
+        this.mId = id;
+    }
+
+    public void setShortDescription(String shortDescription) {
+        this.mShortDescription = shortDescription;
+    }
+
+    public void setDescription(String description) {
+        this.mDescription = description;
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        this.mVideoUrl = videoUrl;
+    }
+
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.mThumbnailUrl = thumbnailUrl;
+    }
 }

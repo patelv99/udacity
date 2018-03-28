@@ -21,4 +21,16 @@ public class RecipeIngredient implements Serializable {
     public String getIngredient() {
         return mIngredient;
     }
+
+    public void setQuantity(int quantity) {
+        this.mQuantity = quantity;
+    }
+
+    public void setMeasure(String measure) {
+        this.mMeasure = measure;
+    }
+
+    public void setIngredient(String ingredient) {
+        this.mIngredient = ingredient;
+    }
 }
