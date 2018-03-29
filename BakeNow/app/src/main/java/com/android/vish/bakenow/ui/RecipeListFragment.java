@@ -10,14 +10,12 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 
 import com.android.vish.bakenow.R;
 import com.android.vish.bakenow.adapters.RecipeListAdapter;
@@ -31,10 +29,11 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnItemClick;
 
-public class RecipeListFragment extends Fragment implements RecipeListAdapter.RecipeListItemListener {
+public class RecipeListFragment extends Fragment {
 
-    @BindView(R.id.fragment_recipe_list_recycler_view) protected RecyclerView mRecipeRecyclerView;
+    @BindView(R.id.fragment_recipe_list_grid_view) protected GridView mRecipesGridView;
 
     private ProgressDialog    mProgressDialog;
     private RecipeListAdapter mRecipeListAdapter;
@@ -45,10 +44,8 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.Re
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_recipe_list, container, false);
         ButterKnife.bind(RecipeListFragment.this, view);
-        mRecipeListAdapter = new RecipeListAdapter(getActivity(), mRecipes, this);
-        mRecipeRecyclerView.setAdapter(mRecipeListAdapter);
-        mRecipeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        mRecipeRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+        mRecipeListAdapter = new RecipeListAdapter(getActivity(), mRecipes);
+        mRecipesGridView.setAdapter(mRecipeListAdapter);
         return view;
     }
 
@@ -58,10 +55,10 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.Re
         new GetRecipesTask().execute(NetworkUtils.buildGetRecipesUrl(NetworkUtils.RECIPES_URL));
     }
 
-    @Override
-    public void onRecipeClick(Recipe recipe) {
+    @OnItemClick(R.id.fragment_recipe_list_grid_view)
+    public void onRecipeClick(int position) {
         Bundle bundle = new Bundle();
-        bundle.putSerializable(RecipeDetailFragment.RECIPE_KEY, recipe);
+        bundle.putSerializable(RecipeDetailFragment.RECIPE_KEY, mRecipes.get(position));
         RecipeDetailFragment recipeDetailFragment = new RecipeDetailFragment();
         recipeDetailFragment.setArguments(bundle);
 
@@ -122,7 +119,7 @@ public class RecipeListFragment extends Fragment implements RecipeListAdapter.Re
                 mRecipes = new ArrayList<>(NetworkUtils.parseRecipesJson(recipesResult));
                 mRecipeListAdapter.updateRecipes(mRecipes);
             } else {
-                Snackbar.make(mRecipeRecyclerView, getString(R.string.network_error), Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(mRecipesGridView, getString(R.string.network_error), Snackbar.LENGTH_SHORT).show();
             }
         }
     }
