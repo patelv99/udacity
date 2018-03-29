@@ -4,10 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.android.vish.bakenow.ui.RecipeActivity">
+    tools:context="com.android.vish.bakenow.ui.RecipeListActivity">
 
-    <FrameLayout
-        android:id="@+id/activity_recipe_fragment_container_one"
+    <fragment
+        android:id="@+id/activity_recipe_list_container"
+        android:name="com.android.vish.bakenow.ui.RecipeListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 </android.support.constraint.ConstraintLayout>

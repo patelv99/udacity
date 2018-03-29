@@ -41,7 +41,6 @@ public class RecipeDetailFragment extends Fragment implements RecipeStepsAdapter
         mRecipeStepsView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mRecipeStepsView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         mRecipeStepsView.setNestedScrollingEnabled(false);
-
         if (getArguments() != null) {
             mRecipe = (Recipe) getArguments().getSerializable(RECIPE_KEY);
             createIngredientsText();
@@ -58,10 +57,9 @@ public class RecipeDetailFragment extends Fragment implements RecipeStepsAdapter
         bundle.putInt(RecipeStepFragment.STEP_KEY, position);
         RecipeStepFragment recipeStepFragment = new RecipeStepFragment();
         recipeStepFragment.setArguments(bundle);
-
         getActivity().getSupportFragmentManager().beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(R.id.activity_recipe_fragment_container, recipeStepFragment, recipeStepFragment.getClass().getSimpleName())
+                .replace(R.id.activity_recipe_fragment_container_one, recipeStepFragment, recipeStepFragment.getClass().getSimpleName())
                 .addToBackStack(null)
                 .commit();
     }

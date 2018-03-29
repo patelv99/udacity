@@ -1,6 +1,7 @@
 package com.android.vish.bakenow.ui;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
@@ -9,7 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -57,16 +57,9 @@ public class RecipeListFragment extends Fragment {
 
     @OnItemClick(R.id.fragment_recipe_list_grid_view)
     public void onRecipeClick(int position) {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(RecipeDetailFragment.RECIPE_KEY, mRecipes.get(position));
-        RecipeDetailFragment recipeDetailFragment = new RecipeDetailFragment();
-        recipeDetailFragment.setArguments(bundle);
-
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(R.id.activity_recipe_fragment_container, recipeDetailFragment, recipeDetailFragment.getClass().getSimpleName())
-                .addToBackStack(null)
-                .commit();
+        Intent intent = new Intent(getActivity(), RecipeActivity.class);
+        intent.putExtra(RecipeDetailFragment.RECIPE_KEY, mRecipes.get(position));
+        startActivity(intent);
     }
 
     /**
