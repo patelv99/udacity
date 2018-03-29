@@ -11,17 +11,32 @@
     <!-- Text Styles -->
     <style name="BlackTitleText" parent="">
         <item name="android:textColor">@color/black</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">22sp</item>
     </style>
 
     <style name="BlackHeaderText" parent="">
         <item name="android:textColor">@color/black</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
     <style name="BlackDetailText" parent="">
         <item name="android:textColor">@color/black</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="BlueTitleText" parent="">
+        <item name="android:textColor">@color/blue</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="BlueHeaderText" parent="">
+        <item name="android:textColor">@color/blue</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="BlueDetailText" parent="">
+        <item name="android:textColor">@color/blue</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
 </resources>

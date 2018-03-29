@@ -6,11 +6,11 @@ import java.io.Serializable;
 
 public class RecipeIngredient implements Serializable {
 
-    @SerializedName("quantity") private   int    mQuantity;
+    @SerializedName("quantity") private   double    mQuantity;
     @SerializedName("measure") private    String mMeasure;
     @SerializedName("ingredient") private String mIngredient;
 
-    public int getQuantity() {
+    public double getQuantity() {
         return mQuantity;
     }
 
@@ -22,7 +22,7 @@ public class RecipeIngredient implements Serializable {
         return mIngredient;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(double quantity) {
         this.mQuantity = quantity;
     }
 

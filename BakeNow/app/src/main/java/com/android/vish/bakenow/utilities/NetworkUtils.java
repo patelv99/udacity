@@ -88,7 +88,7 @@ public class NetworkUtils {
         try {
             for (int i = 0; i < ingredientsJson.length(); i++) {
                 RecipeIngredient recipeIngredient = new RecipeIngredient();
-                recipeIngredient.setQuantity(ingredientsJson.getJSONObject(i).getInt("quantity"));
+                recipeIngredient.setQuantity(ingredientsJson.getJSONObject(i).getDouble("quantity"));
                 recipeIngredient.setMeasure(ingredientsJson.getJSONObject(i).getString("measure"));
                 recipeIngredient.setIngredient(ingredientsJson.getJSONObject(i).getString("ingredient"));
                 ingredients.add(recipeIngredient);

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.android.vish.bakenow.R;
 import com.android.vish.bakenow.adapters.RecipeStepsAdapter;
 import com.android.vish.bakenow.models.Recipe;
+import com.android.vish.bakenow.models.RecipeIngredient;
 import com.android.vish.bakenow.models.RecipeStep;
 
 import java.util.ArrayList;
@@ -41,13 +42,26 @@ public class RecipeDetailFragment extends Fragment {
         mRecipeStepsView.setAdapter(mRecipeStepsAdapter);
         mRecipeStepsView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mRecipeStepsView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+        mRecipeStepsView.setNestedScrollingEnabled(false);
 
         if (getArguments() != null) {
             mRecipe = (Recipe) getArguments().getSerializable(RECIPE_KEY);
+            createIngredientsText();
             mRecipeStepsAdapter.updateSteps(mRecipe.getSteps());
         }
 
         return view;
+    }
+
+    public void createIngredientsText() {
+        for (RecipeIngredient ingredient : mRecipe.getIngredients()) {
+            mIngredientsText.append(Double.toString(ingredient.getQuantity()));
+            mIngredientsText.append(" ");
+            mIngredientsText.append(ingredient.getMeasure().toLowerCase());
+            mIngredientsText.append(" ");
+            mIngredientsText.append(ingredient.getIngredient());
+            mIngredientsText.append("\n");
+        }
     }
 
 }
