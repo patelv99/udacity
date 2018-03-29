@@ -16,15 +16,23 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.RecipeStepsViewHolder> {
 
-    private Context          mContext;
-    private List<RecipeStep> mSteps;
+    private Context                mContext;
+    private List<RecipeStep>       mSteps;
+    private RecipeStepItemListener mRecipeStepItemListener;
 
-    public RecipeStepsAdapter(Context context, List<RecipeStep> steps) {
+    public RecipeStepsAdapter(Context context, List<RecipeStep> steps, RecipeStepItemListener recipeStepItemListener) {
         mContext = context;
         mSteps = new ArrayList<>(steps);
+        mRecipeStepItemListener = recipeStepItemListener;
+    }
+
+    public interface RecipeStepItemListener {
+
+        void onStepClick(RecipeStep recipeStep);
     }
 
     public void updateSteps(List<RecipeStep> steps) {
@@ -56,6 +64,11 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
         public RecipeStepsViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        @OnClick(R.id.item_recipe_step_card)
+        public void onRecipeStepClick() {
+            mRecipeStepItemListener.onStepClick(mSteps.get(getAdapterPosition()));
         }
     }
 }

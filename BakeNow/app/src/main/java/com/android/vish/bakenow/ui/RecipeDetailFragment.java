@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,9 +24,9 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RecipeDetailFragment extends Fragment {
+public class RecipeDetailFragment extends Fragment implements RecipeStepsAdapter.RecipeStepItemListener {
 
-    public static String RECIPE_KEY = "recipeKey";
+    public static final String RECIPE_KEY = "recipeKey";
 
     @BindView(R.id.fragment_recipe_detail_ingredients) protected TextView     mIngredientsText;
     @BindView(R.id.fragment_recipe_detail_steps_list) protected  RecyclerView mRecipeStepsView;
@@ -38,7 +39,7 @@ public class RecipeDetailFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
         ButterKnife.bind(this, view);
-        mRecipeStepsAdapter = new RecipeStepsAdapter(getActivity(), new ArrayList<RecipeStep>());
+        mRecipeStepsAdapter = new RecipeStepsAdapter(getActivity(), new ArrayList<RecipeStep>(), this);
         mRecipeStepsView.setAdapter(mRecipeStepsAdapter);
         mRecipeStepsView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mRecipeStepsView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
@@ -53,6 +54,23 @@ public class RecipeDetailFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onStepClick(RecipeStep recipeStep) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(RecipeStepFragment.STEP_KEY, recipeStep);
+        RecipeStepFragment recipeStepFragment = new RecipeStepFragment();
+        recipeStepFragment.setArguments(bundle);
+
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .replace(R.id.activity_recipe_fragment_container, recipeStepFragment, recipeStepFragment.getClass().getSimpleName())
+                .addToBackStack(null)
+                .commit();
+    }
+
+    /**
+     * Display the ingredients in a list type
+     */
     public void createIngredientsText() {
         for (RecipeIngredient ingredient : mRecipe.getIngredients()) {
             mIngredientsText.append(Double.toString(ingredient.getQuantity()));
@@ -63,5 +81,4 @@ public class RecipeDetailFragment extends Fragment {
             mIngredientsText.append("\n");
         }
     }
-
 }
