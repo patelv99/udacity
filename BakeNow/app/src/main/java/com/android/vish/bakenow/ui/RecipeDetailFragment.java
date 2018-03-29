@@ -17,9 +17,6 @@ import com.android.vish.bakenow.R;
 import com.android.vish.bakenow.adapters.RecipeStepsAdapter;
 import com.android.vish.bakenow.models.Recipe;
 import com.android.vish.bakenow.models.RecipeIngredient;
-import com.android.vish.bakenow.models.RecipeStep;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,7 +36,7 @@ public class RecipeDetailFragment extends Fragment implements RecipeStepsAdapter
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
         ButterKnife.bind(this, view);
-        mRecipeStepsAdapter = new RecipeStepsAdapter(getActivity(), new ArrayList<RecipeStep>(), this);
+        mRecipeStepsAdapter = new RecipeStepsAdapter(getActivity(), new Recipe(), this);
         mRecipeStepsView.setAdapter(mRecipeStepsAdapter);
         mRecipeStepsView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mRecipeStepsView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
@@ -48,16 +45,17 @@ public class RecipeDetailFragment extends Fragment implements RecipeStepsAdapter
         if (getArguments() != null) {
             mRecipe = (Recipe) getArguments().getSerializable(RECIPE_KEY);
             createIngredientsText();
-            mRecipeStepsAdapter.updateSteps(mRecipe.getSteps());
+            mRecipeStepsAdapter.updateRecipe(mRecipe);
         }
 
         return view;
     }
 
     @Override
-    public void onStepClick(RecipeStep recipeStep) {
+    public void onStepClick(Recipe recipe, int position) {
         Bundle bundle = new Bundle();
-        bundle.putSerializable(RecipeStepFragment.STEP_KEY, recipeStep);
+        bundle.putSerializable(RECIPE_KEY, recipe);
+        bundle.putInt(RecipeStepFragment.STEP_KEY, position);
         RecipeStepFragment recipeStepFragment = new RecipeStepFragment();
         recipeStepFragment.setArguments(bundle);
 

@@ -9,10 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.android.vish.bakenow.R;
-import com.android.vish.bakenow.models.RecipeStep;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.android.vish.bakenow.models.Recipe;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,22 +18,22 @@ import butterknife.OnClick;
 public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.RecipeStepsViewHolder> {
 
     private Context                mContext;
-    private List<RecipeStep>       mSteps;
+    private Recipe                 mRecipe;
     private RecipeStepItemListener mRecipeStepItemListener;
 
-    public RecipeStepsAdapter(Context context, List<RecipeStep> steps, RecipeStepItemListener recipeStepItemListener) {
+    public RecipeStepsAdapter(Context context, Recipe recipe, RecipeStepItemListener recipeStepItemListener) {
         mContext = context;
-        mSteps = new ArrayList<>(steps);
+        mRecipe = recipe;
         mRecipeStepItemListener = recipeStepItemListener;
     }
 
     public interface RecipeStepItemListener {
 
-        void onStepClick(RecipeStep recipeStep);
+        void onStepClick(Recipe recipe, int position);
     }
 
-    public void updateSteps(List<RecipeStep> steps) {
-        mSteps = new ArrayList<>(steps);
+    public void updateRecipe(Recipe recipe) {
+        mRecipe = recipe;
     }
 
     @NonNull
@@ -49,12 +46,12 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull RecipeStepsViewHolder holder, int position) {
-        holder.mRecipeStep.setText(mSteps.get(position).getShortDescription());
+        holder.mRecipeStep.setText(mRecipe.getSteps().get(position).getShortDescription());
     }
 
     @Override
     public int getItemCount() {
-        return mSteps.size();
+        return mRecipe.getSteps().size();
     }
 
     protected class RecipeStepsViewHolder extends RecyclerView.ViewHolder {
@@ -68,7 +65,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
 
         @OnClick(R.id.item_recipe_step_card)
         public void onRecipeStepClick() {
-            mRecipeStepItemListener.onStepClick(mSteps.get(getAdapterPosition()));
+            mRecipeStepItemListener.onStepClick(mRecipe, getAdapterPosition());
         }
     }
 }
