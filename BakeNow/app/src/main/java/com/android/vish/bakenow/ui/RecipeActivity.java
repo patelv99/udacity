@@ -11,6 +11,8 @@ import butterknife.ButterKnife;
 
 public class RecipeActivity extends AppCompatActivity {
 
+    private boolean mTwoPane;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,5 +30,16 @@ public class RecipeActivity extends AppCompatActivity {
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .replace(R.id.activity_recipe_fragment_container_one, recipeDetailFragment, recipeDetailFragment.getClass().getSimpleName())
                 .commit();
+        mTwoPane = findViewById(R.id.activity_recipe_fragment_container_two) != null;
+        if (mTwoPane) {
+            RecipeStepFragment recipeStepFragment = new RecipeStepFragment();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(RecipeDetailFragment.RECIPE_KEY, recipe);
+            recipeStepFragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .replace(R.id.activity_recipe_fragment_container_two, recipeStepFragment, recipeStepFragment.getClass().getSimpleName())
+                    .commit();
+        }
     }
 }
