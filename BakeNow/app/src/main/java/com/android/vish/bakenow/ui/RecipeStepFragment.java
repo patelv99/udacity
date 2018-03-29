@@ -42,15 +42,20 @@ public class RecipeStepFragment extends Fragment {
     public void onPreviousClick() {
         if (mStepNumber > 0) {
             mStepNumber--;
+            mStepDescription.setText(mRecipe.getSteps().get(mStepNumber).getDescription());
         }
-        mStepDescription.setText(mRecipe.getSteps().get(mStepNumber).getDescription());
     }
 
     @OnClick(R.id.fragment_recipe_step_next_button)
     public void onNextClick() {
         if (mStepNumber < mRecipe.getSteps().size() - 1) {
             mStepNumber++;
+            mStepDescription.setText(mRecipe.getSteps().get(mStepNumber).getDescription());
         }
+    }
+
+    public void updateStepNumber(int position) {
+        mStepNumber = position;
         mStepDescription.setText(mRecipe.getSteps().get(mStepNumber).getDescription());
     }
 }

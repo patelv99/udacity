@@ -52,16 +52,21 @@ public class RecipeDetailFragment extends Fragment implements RecipeStepsAdapter
 
     @Override
     public void onStepClick(Recipe recipe, int position) {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(RECIPE_KEY, recipe);
-        bundle.putInt(RecipeStepFragment.STEP_KEY, position);
-        RecipeStepFragment recipeStepFragment = new RecipeStepFragment();
-        recipeStepFragment.setArguments(bundle);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(R.id.activity_recipe_fragment_container_one, recipeStepFragment, recipeStepFragment.getClass().getSimpleName())
-                .addToBackStack(null)
-                .commit();
+        RecipeStepFragment fragment = (RecipeStepFragment) getFragmentManager().findFragmentByTag(RecipeStepFragment.class.getSimpleName());
+        if (fragment != null) {
+            fragment.updateStepNumber(position);
+        } else {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(RECIPE_KEY, recipe);
+            bundle.putInt(RecipeStepFragment.STEP_KEY, position);
+            RecipeStepFragment recipeStepFragment = new RecipeStepFragment();
+            recipeStepFragment.setArguments(bundle);
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .replace(R.id.activity_recipe_fragment_container_one, recipeStepFragment, recipeStepFragment.getClass().getSimpleName())
+                    .addToBackStack(null)
+                    .commit();
+        }
     }
 
     /**
