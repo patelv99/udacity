@@ -39,6 +39,16 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <style name="WhiteWidgetTitleText" parent="">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="WhiteWidgetDetailText" parent="">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
     <!-- Buttons -->
     <style name="GeneralButton" parent="">
         <item name="android:textSize">16sp</item>

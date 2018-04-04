@@ -10,13 +10,23 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/fragment_recipe_detail_ingredients_header"
+            android:id="@+id/fragment_recipe_detail_servings"
             style="@style/BlueHeaderText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/layout_side_padding"
             android:layout_marginStart="@dimen/layout_side_padding"
             android:layout_marginTop="@dimen/layout_side_padding"
+            android:text="@string/serves"/>
+
+        <TextView
+            android:id="@+id/fragment_recipe_detail_ingredients_header"
+            style="@style/BlueHeaderText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/layout_side_padding"
+            android:layout_marginStart="@dimen/layout_side_padding"
+            android:layout_marginTop="10dp"
             android:text="@string/ingredients"/>
 
         <TextView

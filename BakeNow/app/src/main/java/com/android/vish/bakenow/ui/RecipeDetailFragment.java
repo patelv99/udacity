@@ -25,6 +25,7 @@ public class RecipeDetailFragment extends Fragment implements RecipeStepsAdapter
 
     public static final String RECIPE_KEY = "recipeKey";
 
+    @BindView(R.id.fragment_recipe_detail_servings) protected    TextView     mServings;
     @BindView(R.id.fragment_recipe_detail_ingredients) protected TextView     mIngredientsText;
     @BindView(R.id.fragment_recipe_detail_steps_list) protected  RecyclerView mRecipeStepsView;
 
@@ -43,10 +44,10 @@ public class RecipeDetailFragment extends Fragment implements RecipeStepsAdapter
         mRecipeStepsView.setNestedScrollingEnabled(false);
         if (getArguments() != null) {
             mRecipe = (Recipe) getArguments().getSerializable(RECIPE_KEY);
+            mServings.setText(getString(R.string.serves, mRecipe.getServings()));
             createIngredientsText();
             mRecipeStepsAdapter.updateRecipe(mRecipe);
         }
-
         return view;
     }
 

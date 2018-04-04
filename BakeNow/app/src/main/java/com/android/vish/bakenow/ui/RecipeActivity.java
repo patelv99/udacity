@@ -26,10 +26,12 @@ public class RecipeActivity extends AppCompatActivity {
             bundle.putSerializable(RecipeDetailFragment.RECIPE_KEY, recipe);
             recipeDetailFragment.setArguments(bundle);
         }
-        getSupportFragmentManager().beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(R.id.activity_recipe_fragment_container_one, recipeDetailFragment, recipeDetailFragment.getClass().getSimpleName())
-                .commit();
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .replace(R.id.activity_recipe_fragment_container_one, recipeDetailFragment, recipeDetailFragment.getClass().getSimpleName())
+                    .commit();
+        }
         mTwoPane = findViewById(R.id.activity_recipe_fragment_container_two) != null;
         if (mTwoPane) {
             RecipeStepFragment recipeStepFragment = new RecipeStepFragment();
