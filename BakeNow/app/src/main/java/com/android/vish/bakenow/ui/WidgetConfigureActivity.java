@@ -4,6 +4,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -13,10 +14,11 @@ import android.widget.GridView;
 import android.widget.RemoteViews;
 
 import com.android.vish.bakenow.R;
+import com.android.vish.bakenow.RecipeIngredientsWidget;
 import com.android.vish.bakenow.adapters.RecipeListAdapter;
 import com.android.vish.bakenow.models.Recipe;
-import com.android.vish.bakenow.models.RecipeIngredient;
 import com.android.vish.bakenow.utilities.NetworkUtils;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.net.URL;
@@ -58,28 +60,18 @@ public class WidgetConfigureActivity extends AppCompatActivity {
 
     @OnItemClick(R.id.activity_widget_configure_recipe_list)
     public void onRecipeClick(int position) {
+        PreferenceManager.getDefaultSharedPreferences(this).edit()
+                .putString(Integer.toString(mAppWidgetId), new Gson().toJson(mRecipes.get(position)))
+                .apply();
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
         RemoteViews views = new RemoteViews(getPackageName(), R.layout.widget_recipe);
-        views.setTextViewText(R.id.widget_recipe_title, mRecipes.get(position).getName());
-        views.setTextViewText(R.id.widget_recipe_ingredients, createIngredientsText(mRecipes.get(position)));
         appWidgetManager.updateAppWidget(mAppWidgetId, views);
-        Intent intent = new Intent(this, RecipeActivity.class);
-        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+        Intent intent = new Intent(this, RecipeIngredientsWidget.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{mAppWidgetId});
+        sendBroadcast(intent);
         setResult(RESULT_OK, intent);
         finish();
-    }
-
-
-    /**
-     * Display the ingredients in a list type
-     */
-    public String createIngredientsText(Recipe recipe) {
-        StringBuilder ingredientsString = new StringBuilder();
-        for (RecipeIngredient ingredient : recipe.getIngredients()) {
-            ingredientsString.append(ingredient.getIngredient()).append(", ");
-        }
-        ingredientsString.replace(ingredientsString.lastIndexOf(", "), ingredientsString.length(), "");
-        return ingredientsString.toString();
     }
 
     public class GetRecipesTask extends AsyncTask<URL, Void, String> {
