@@ -19,7 +19,7 @@ import com.android.vish.bakenow.ui.RecipeDetailFragment;
 import com.google.gson.Gson;
 
 public class RecipeIngredientsWidget extends AppWidgetProvider {
-    
+
     @Override
     public void onEnabled(Context context) {
         super.onEnabled(context);
