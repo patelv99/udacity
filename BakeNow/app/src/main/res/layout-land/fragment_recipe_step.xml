@@ -9,7 +9,7 @@
         android:id="@+id/fragment_recipe_video_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.5"
+        android:layout_weight="1"
         android:background="@color/black">
 
         <com.google.android.exoplayer2.ui.PlayerView
@@ -26,7 +26,6 @@
         android:layout_marginEnd="@dimen/layout_side_padding"
         android:layout_marginStart="@dimen/layout_side_padding"
         android:layout_marginTop="10dp"
-        android:layout_weight=".5"
         android:text="Step"/>
 
     <LinearLayout
