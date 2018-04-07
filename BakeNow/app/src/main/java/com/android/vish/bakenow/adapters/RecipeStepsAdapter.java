@@ -3,13 +3,16 @@ package com.android.vish.bakenow.adapters;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.vish.bakenow.R;
 import com.android.vish.bakenow.models.Recipe;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,6 +50,9 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
     @Override
     public void onBindViewHolder(@NonNull RecipeStepsViewHolder holder, int position) {
         holder.mRecipeStep.setText(mRecipe.getSteps().get(position).getShortDescription());
+        if (!TextUtils.isEmpty(mRecipe.getSteps().get(position).getThumbnailUrl())) {
+            Picasso.get().load(mRecipe.getSteps().get(position).getThumbnailUrl()).into(holder.mStepImage);
+        }
     }
 
     @Override
@@ -56,7 +62,8 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
 
     protected class RecipeStepsViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.item_recipe_step_title) protected TextView mRecipeStep;
+        @BindView(R.id.item_recipe_step_image) protected ImageView mStepImage;
+        @BindView(R.id.item_recipe_step_title) protected TextView  mRecipeStep;
 
         public RecipeStepsViewHolder(View itemView) {
             super(itemView);

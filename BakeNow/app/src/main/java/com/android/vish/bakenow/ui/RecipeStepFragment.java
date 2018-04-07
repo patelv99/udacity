@@ -34,6 +34,7 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,8 +45,10 @@ public class RecipeStepFragment extends Fragment {
     public static final String STEP_KEY                  = "recipeStep";
     public static final String VIDEO_POSITION            = "videoPosition";
     public static final String VIDEO_FULLSCREEN_POSITION = "videoFullScreen";
+    public static final String VIDEO_PLAY_WHEN_READY     = "playWhenReady";
 
     @BindView(R.id.fragment_recipe_video_container) protected      FrameLayout mVideoContainer;
+    @BindView(R.id.fragment_recipe_step_image) protected           ImageView   mStepImage;
     @BindView(R.id.fragment_recipe_step_description) protected     TextView    mStepDescription;
     @BindView(R.id.fragment_recipe_step_video) protected           PlayerView  mVideoPlayerView;
     @BindView(R.id.exo_fullscreen_icon) protected                  ImageView   mFullScreenIcon;
@@ -57,7 +60,8 @@ public class RecipeStepFragment extends Fragment {
     private SimpleExoPlayer mExoPlayer;
     private long            mVideoPosition;
     private Dialog          mFullScreenDialog;
-    private boolean mIsFullScreen = false;
+    private boolean mIsFullScreen  = false;
+    private boolean mPlayWhenReady = false;
 
     @Nullable
     @Override
@@ -69,6 +73,7 @@ public class RecipeStepFragment extends Fragment {
             mStepNumber = savedInstanceState.getInt(STEP_KEY);
             mVideoPosition = savedInstanceState.getLong(VIDEO_POSITION);
             mIsFullScreen = savedInstanceState.getBoolean(VIDEO_FULLSCREEN_POSITION);
+            mPlayWhenReady = savedInstanceState.getBoolean(VIDEO_PLAY_WHEN_READY, false);
         } else if (getArguments() != null) {
             mRecipe = (Recipe) getArguments().getSerializable(RecipeDetailFragment.RECIPE_KEY);
             mStepNumber = getArguments().getInt(STEP_KEY);
@@ -117,6 +122,7 @@ public class RecipeStepFragment extends Fragment {
         outState.putInt(STEP_KEY, mStepNumber);
         outState.putLong(VIDEO_POSITION, mVideoPosition);
         outState.putBoolean(VIDEO_FULLSCREEN_POSITION, mIsFullScreen);
+        outState.putBoolean(VIDEO_PLAY_WHEN_READY, mExoPlayer.getPlayWhenReady());
     }
 
     @OnClick(R.id.exo_fullscreen_icon)
@@ -148,6 +154,9 @@ public class RecipeStepFragment extends Fragment {
      * Update the UI to reflect the current {@link RecipeStep}
      */
     public void updateDisplayedStep() {
+        if (!TextUtils.isEmpty(mRecipe.getImage())) {
+            Picasso.get().load(mRecipe.getImage()).into(mStepImage);
+        }
         mStepDescription.setText(mRecipe.getSteps().get(mStepNumber).getDescription());
         if (!TextUtils.isEmpty(mRecipe.getSteps().get(mStepNumber).getVideoUrl())) {
             mVideoContainer.setVisibility(View.VISIBLE);
@@ -194,6 +203,7 @@ public class RecipeStepFragment extends Fragment {
         if (mExoPlayer.getCurrentWindowIndex() > -1) {
             mExoPlayer.seekTo(mExoPlayer.getCurrentWindowIndex(), mVideoPosition);
         }
+        mExoPlayer.setPlayWhenReady(mPlayWhenReady);
     }
 
     /**
