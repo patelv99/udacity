@@ -8,9 +8,11 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.GridView;
 import android.widget.RemoteViews;
 
 import com.android.vish.bakenow.R;
@@ -30,9 +32,9 @@ import butterknife.ButterKnife;
 import butterknife.OnItemClick;
 
 
-public class WidgetConfigureActivity extends AppCompatActivity {
+public class WidgetConfigureActivity extends AppCompatActivity implements RecipeListAdapter.RecipeItemListener {
 
-    @BindView(R.id.activity_widget_configure_recipe_list) protected GridView mRecipesGridView;
+    @BindView(R.id.activity_widget_configure_recipe_list) protected RecyclerView mRecipesRecyclerView;
 
     private RecipeListAdapter mRecipeListAdapter;
     private List<Recipe> mRecipes = new ArrayList<>();
@@ -52,16 +54,17 @@ public class WidgetConfigureActivity extends AppCompatActivity {
         setContentView(R.layout.activity_widget_configure);
         ButterKnife.bind(this);
 
-        mRecipeListAdapter = new RecipeListAdapter(this, mRecipes);
-        mRecipesGridView.setAdapter(mRecipeListAdapter);
+        mRecipeListAdapter = new RecipeListAdapter(this, mRecipes, this);
+        mRecipesRecyclerView.setAdapter(mRecipeListAdapter);
+        mRecipesRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        mRecipesRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         new GetRecipesTask().execute(NetworkUtils.buildGetRecipesUrl(NetworkUtils.RECIPES_URL));
     }
 
-
-    @OnItemClick(R.id.activity_widget_configure_recipe_list)
-    public void onRecipeClick(int position) {
+    @Override
+    public void onRecipeClick(Recipe recipe) {
         PreferenceManager.getDefaultSharedPreferences(this).edit()
-                .putString(Integer.toString(mAppWidgetId), new Gson().toJson(mRecipes.get(position)))
+                .putString(Integer.toString(mAppWidgetId), new Gson().toJson(recipe))
                 .apply();
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
         RemoteViews views = new RemoteViews(getPackageName(), R.layout.widget_recipe);
@@ -99,7 +102,7 @@ public class WidgetConfigureActivity extends AppCompatActivity {
                 mRecipes = new ArrayList<>(NetworkUtils.parseRecipesJson(recipesResult));
                 mRecipeListAdapter.updateRecipes(mRecipes);
             } else {
-                Snackbar.make(mRecipesGridView, getString(R.string.network_error), Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(mRecipesRecyclerView, getString(R.string.network_error), Snackbar.LENGTH_SHORT).show();
             }
         }
     }

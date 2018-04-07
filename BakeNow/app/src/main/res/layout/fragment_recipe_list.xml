@@ -5,11 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <GridView
-        android:id="@+id/fragment_recipe_list_grid_view"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/fragment_recipe_list_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:numColumns="2"
         android:paddingEnd="@dimen/layout_side_padding"
         android:paddingStart="@dimen/layout_side_padding"
         android:paddingTop="@dimen/layout_side_padding"

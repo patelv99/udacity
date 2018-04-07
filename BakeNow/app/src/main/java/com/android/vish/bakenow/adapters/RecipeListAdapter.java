@@ -1,12 +1,12 @@
 package com.android.vish.bakenow.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,24 +17,40 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecipeListAdapter extends BaseAdapter {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-    private Context      mContext;
-    private List<Recipe> mRecipes;
+public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.RecipeViewHolder> {
 
-    public RecipeListAdapter(Context context, List<Recipe> recipes) {
+    private Context            mContext;
+    private List<Recipe>       mRecipes;
+    private RecipeItemListener mRecipeItemListener;
+
+    public RecipeListAdapter(Context context, List<Recipe> recipes, RecipeItemListener recipeItemListener) {
         mContext = context;
         mRecipes = new ArrayList<>(recipes);
+        mRecipeItemListener = recipeItemListener;
+    }
+
+    public interface RecipeItemListener {
+
+        void onRecipeClick(Recipe recipe);
+    }
+
+    @NonNull
+    @Override
+    public RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(mContext).inflate(R.layout.item_recipe, parent, false);
+        return new RecipeViewHolder(itemView);
     }
 
     @Override
-    public int getCount() {
-        return mRecipes.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return mRecipes.get(position);
+    public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
+        holder.mRecipeTitle.setText(mRecipes.get(position).getName());
+        if (!TextUtils.isEmpty(mRecipes.get(position).getImage())) {
+            Picasso.get().load(mRecipes.get(position).getImage()).into(holder.mRecipeImage);
+        }
     }
 
     @Override
@@ -43,21 +59,29 @@ public class RecipeListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_recipe, parent, false);
-        }
-        TextView recipeName = convertView.findViewById(R.id.item_recipe_title);
-        ImageView recipeImage = convertView.findViewById(R.id.item_recipe_image);
-        recipeName.setText(mRecipes.get(position).getName());
-        if (!TextUtils.isEmpty(mRecipes.get(position).getImage())) {
-            Picasso.get().load(mRecipes.get(position).getImage()).into(recipeImage);
-        }
-        return convertView;
+    public int getItemCount() {
+        return mRecipes.size();
     }
 
     public void updateRecipes(List<Recipe> recipes) {
         mRecipes = new ArrayList<>(recipes);
         notifyDataSetChanged();
+    }
+
+
+    protected class RecipeViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.item_recipe_title) protected TextView  mRecipeTitle;
+        @BindView(R.id.item_recipe_image) protected ImageView mRecipeImage;
+
+        public RecipeViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+
+        @OnClick(R.id.item_recipe_card)
+        public void onRecipeStepClick() {
+            mRecipeItemListener.onRecipeClick(mRecipes.get(getAdapterPosition()));
+        }
     }
 }
