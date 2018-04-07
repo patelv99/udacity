@@ -1,14 +1,18 @@
 package com.android.vish.bakenow.adapters;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.vish.bakenow.R;
 import com.android.vish.bakenow.models.Recipe;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +48,11 @@ public class RecipeListAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_recipe, parent, false);
         }
         TextView recipeName = convertView.findViewById(R.id.item_recipe_title);
+        ImageView recipeImage = convertView.findViewById(R.id.item_recipe_image);
         recipeName.setText(mRecipes.get(position).getName());
+        if (!TextUtils.isEmpty(mRecipes.get(position).getImage())) {
+            Picasso.get().load(mRecipes.get(position).getImage()).into(recipeImage);
+        }
         return convertView;
     }
 
