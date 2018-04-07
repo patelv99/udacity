@@ -2,6 +2,7 @@ package com.android.vish.bakenow;
 
 import android.support.test.espresso.IdlingRegistry;
 import android.support.test.espresso.IdlingResource;
+import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -43,9 +44,9 @@ public class RecipeListActivityTest {
 
     @Test
     public void testRecipeClick() {
-        onView(withId(R.id.fragment_recipe_list_grid_view)).check(matches(isDisplayed()));
-        onData(anything()).inAdapterView(withId(R.id.fragment_recipe_list_grid_view))
-                .atPosition(0).perform(click());
+        onView(withId(R.id.fragment_recipe_list_recycler_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.fragment_recipe_list_recycler_view))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
         onView(withId(R.id.activity_recipe_fragment_container_one)).check(matches(isDisplayed()));
     }
 }
