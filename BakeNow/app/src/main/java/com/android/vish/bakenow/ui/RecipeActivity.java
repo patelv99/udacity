@@ -18,7 +18,7 @@ public class RecipeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe);
         ButterKnife.bind(this);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Recipe recipe = (Recipe) getIntent().getSerializableExtra(RecipeDetailFragment.RECIPE_KEY);
         RecipeDetailFragment recipeDetailFragment = new RecipeDetailFragment();
         if (recipe != null) {
