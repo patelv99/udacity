@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.udacity.gradle.builditbigger.BuildConfig;
+import com.udacity.gradle.builditbigger.R;
 
 
 /**
@@ -19,8 +21,7 @@ public class MainActivityFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_main, container, false);
 
         AdView mAdView = (AdView) root.findViewById(R.id.adView);
@@ -37,6 +38,5 @@ public class MainActivityFragment extends Fragment {
         } else {
             mAdView.setVisibility(View.GONE);
         }
-        return root;
-    }
+        return root;    }
 }
