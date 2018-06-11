@@ -30,14 +30,11 @@ import com.example.xyzreader.R;
 
 
 public class DrawInsetsFrameLayout extends FrameLayout {
+
     private Drawable mInsetBackground;
-    private Drawable mTopInsetBackground;
-    private Drawable mBottomInsetBackground;
-    private Drawable mSideInsetBackground;
 
     private Rect mInsets;
     private Rect mTempRect = new Rect();
-    private OnInsetsCallback mOnInsetsCallback;
 
     public DrawInsetsFrameLayout(Context context) {
         super(context);
@@ -56,25 +53,12 @@ public class DrawInsetsFrameLayout extends FrameLayout {
 
     private void init(Context context, AttributeSet attrs, int defStyle) {
         final TypedArray a = context.obtainStyledAttributes(attrs,
-                R.styleable.DrawInsetsFrameLayout, defStyle, 0);
+                                                            R.styleable.DrawInsetsFrameLayout, defStyle, 0);
         assert a != null;
 
         mInsetBackground = a.getDrawable(R.styleable.DrawInsetsFrameLayout_insetBackground);
 
         a.recycle();
-    }
-
-    public void setInsetBackground(Drawable insetBackground) {
-        if (mInsetBackground != null) {
-            mInsetBackground.setCallback(null);
-        }
-
-        if (insetBackground != null) {
-            insetBackground.setCallback(this);
-        }
-
-        mInsetBackground = insetBackground;
-        postInvalidateOnAnimation();
     }
 
     @Override
@@ -96,10 +80,6 @@ public class DrawInsetsFrameLayout extends FrameLayout {
         }
     }
 
-    public void setOnInsetsCallback(OnInsetsCallback onInsetsCallback) {
-        mOnInsetsCallback = onInsetsCallback;
-    }
-
     @Override
     public WindowInsets onApplyWindowInsets(WindowInsets insets) {
         insets = super.onApplyWindowInsets(insets);
@@ -110,9 +90,6 @@ public class DrawInsetsFrameLayout extends FrameLayout {
                 insets.getSystemWindowInsetBottom());
         setWillNotDraw(false);
         postInvalidateOnAnimation();
-        if (mOnInsetsCallback != null) {
-            mOnInsetsCallback.onInsetsChanged(mInsets);
-        }
         return insets;
     }
 
@@ -154,6 +131,7 @@ public class DrawInsetsFrameLayout extends FrameLayout {
     }
 
     public static interface OnInsetsCallback {
+
         public void onInsetsChanged(Rect insets);
     }
 }
