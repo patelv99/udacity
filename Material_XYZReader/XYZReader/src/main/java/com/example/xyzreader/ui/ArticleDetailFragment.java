@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.bumptech.glide.Glide;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 
@@ -149,21 +150,9 @@ public class ArticleDetailFragment extends Fragment implements LoaderManager.Loa
                 mToolbar.setSubtitle(Html.fromHtml(outputFormat.format(publishedDate) + " by " + mCursor.getString(ArticleLoader.Query.AUTHOR)));
             }
             bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
-            ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
-                    .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
-                        @Override
-                        public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
-                            Bitmap bitmap = imageContainer.getBitmap();
-                            if (bitmap != null) {
-                                mPhotoView.setImageBitmap(imageContainer.getBitmap());
-                            }
-                        }
-
-                        @Override
-                        public void onErrorResponse(VolleyError volleyError) {
-
-                        }
-                    });
+            Glide.with(getActivity())
+                    .load(mCursor.getString(ArticleLoader.Query.PHOTO_URL))
+                    .into(mPhotoView);
         } else {
             mRootView.setVisibility(View.GONE);
             mToolbar.setTitle("N/A");
