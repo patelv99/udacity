@@ -20,8 +20,8 @@ public class TripContentProvider extends ContentProvider {
     public static final int TRIPS        = 100;
     public static final int TRIP_WITH_ID = 101;
 
-    private              DbHelper   mDbHelper;
-    private static final UriMatcher sUriMatcher = buildUriMatcher();
+    private static final UriMatcher URI_MATCHER = buildUriMatcher();
+    private              DbHelper   dbHelper;
 
     public static UriMatcher buildUriMatcher() {
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -32,23 +32,27 @@ public class TripContentProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        mDbHelper = new DbHelper(getContext());
+        dbHelper = new DbHelper(getContext());
         Log.i(this.getClass().getSimpleName(), "DB HELPER CREATED");
         return true;
     }
 
     @Nullable
     @Override
-    public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
-        final SQLiteDatabase database = mDbHelper.getReadableDatabase();
-        int match = sUriMatcher.match(uri);
+    public Cursor query(@NonNull Uri uri,
+                        @Nullable String[] projection,
+                        @Nullable String selection,
+                        @Nullable String[] selectionArgs,
+                        @Nullable String sortOrder) {
+        final SQLiteDatabase database = dbHelper.getReadableDatabase();
+        int match = URI_MATCHER.match(uri);
         Cursor cursor;
         switch (match) {
             case TRIPS:
                 cursor = database.query(TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             case TRIP_WITH_ID:
-                cursor = database.query(TABLE_NAME, projection, "_id=?", new String[]{uri.getPathSegments().get(1)}, null, null, sortOrder);
+                cursor = database.query(TABLE_NAME, projection, "_id=?", new String[] { uri.getPathSegments().get(1) }, null, null, sortOrder);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -66,8 +70,8 @@ public class TripContentProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
-        final SQLiteDatabase database = mDbHelper.getWritableDatabase();
-        int match = sUriMatcher.match(uri);
+        final SQLiteDatabase database = dbHelper.getWritableDatabase();
+        int match = URI_MATCHER.match(uri);
         Uri uriToReturn;
         switch (match) {
             case TRIPS:
@@ -87,12 +91,12 @@ public class TripContentProvider extends ContentProvider {
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        final SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        int match = sUriMatcher.match(uri);
+        final SQLiteDatabase db = dbHelper.getWritableDatabase();
+        int match = URI_MATCHER.match(uri);
         int moviesDeleted;
         switch (match) {
             case TRIP_WITH_ID:
-                moviesDeleted = db.delete(TABLE_NAME, "_id=?", new String[]{uri.getPathSegments().get(1)});
+                moviesDeleted = db.delete(TABLE_NAME, "_id=?", new String[] { uri.getPathSegments().get(1) });
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -105,6 +109,20 @@ public class TripContentProvider extends ContentProvider {
 
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+        final SQLiteDatabase db = dbHelper.getWritableDatabase();
+        int match = URI_MATCHER.match(uri);
+        int moviesUpdated;
+        switch (match) {
+            case TRIP_WITH_ID:
+                moviesUpdated = db.update(TABLE_NAME, values, "_id=?", new String[] { uri.getPathSegments().get(1)});
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+
+        }
+        if (moviesUpdated != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return moviesUpdated;
     }
 }

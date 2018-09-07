@@ -57,6 +57,10 @@ public class HomeActivity extends AppCompatActivity {
 
         trips = new ArrayList<>();
         showProgressDialog();
+    }
+
+    @Override protected void onResume() {
+        super.onResume();
         new GetAllTripsTask().execute();
     }
 
@@ -64,6 +68,9 @@ public class HomeActivity extends AppCompatActivity {
      * Open TripEditActivity when the FAB is clicked
      */
     private void onFABClick() {
+        Intent intent = new Intent(this, TripEditActivity.class);
+        intent.putExtra(EDIT_KEY, EDIT_TRIP);
+        startActivity(intent);
     }
 
     /**

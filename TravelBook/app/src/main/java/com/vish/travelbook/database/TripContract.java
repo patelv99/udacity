@@ -11,8 +11,7 @@ public class TripContract {
 
     public static final class TripEntry implements BaseColumns {
 
-        public static final Uri CONTENT_URI =
-            BASE_CONTENT_URI.buildUpon().appendPath(PATH_TRIPS).build();
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_TRIPS).build();
 
         public static final String TABLE_NAME        = "trips";
         public static final String COLUMN_TRIP_TITLE = "title";

@@ -73,11 +73,13 @@ public class TripDetailActivity extends AppCompatActivity {
             super(manager);
         }
 
-        @Override public Fragment getItem(final int position) {
+        @Override
+        public Fragment getItem(final int position) {
             return tabFragments.get(position);
         }
 
-        @Override public int getCount() {
+        @Override
+        public int getCount() {
             return tabFragments.size();
         }
 
@@ -87,7 +89,8 @@ public class TripDetailActivity extends AppCompatActivity {
         }
 
         @Nullable
-        @Override public CharSequence getPageTitle(final int position) {
+        @Override
+        public CharSequence getPageTitle(final int position) {
             return tabTitles.get(position);
         }
     }
