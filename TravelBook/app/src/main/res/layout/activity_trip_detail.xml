@@ -27,7 +27,7 @@
             android:background="@color/primary_blue"
             app:tabTextColor="@color/white"
             app:tabMode="fixed"
-            app:tabSelectedTextColor="@color/accent_red">
+            app:tabSelectedTextColor="@color/white">
         </com.google.android.material.tabs.TabLayout>
 
     </com.google.android.material.appbar.AppBarLayout>

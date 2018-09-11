@@ -19,7 +19,6 @@ public class Trip implements Serializable {
     public List<Expense>        expenses;
 
     public Trip() {
-
     }
 
     public Trip(String title, DateTime startDate, DateTime endDate, @Nullable String image) {
