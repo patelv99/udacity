@@ -38,7 +38,7 @@ public class TripPackingAdapter extends RecyclerView.Adapter<TripPackingAdapter.
     }
 
     @Override public int getItemCount() {
-        if (trip != null && trip.packingItems !=null) {
+        if (trip != null && trip.packingItems != null) {
             return trip.packingItems.size();
         } else {
             return 0;

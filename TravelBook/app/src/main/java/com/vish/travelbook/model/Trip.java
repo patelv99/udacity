@@ -14,9 +14,9 @@ public class Trip implements Serializable {
     public DateTime endDate;
     public String   image;
 
-    public List<ItineraryEvent> events;
-    public List<PackingItem>    packingItems;
-    public List<Expense>        expenses;
+    public List<ItineraryEvent> events       = new ArrayList<>();
+    public List<PackingItem>    packingItems = new ArrayList<>();
+    public List<Expense>        expenses     = new ArrayList<>();
 
     public Trip() {
     }

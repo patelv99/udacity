@@ -32,8 +32,6 @@ import static com.vish.travelbook.TripDetailActivity.TRIP_KEY;
 
 public class TripInfoFragment extends Fragment {
 
-    public static final String MODIFY_TRIP = "modify_trip";
-
     private ProgressDialog    progressDialog;
     private TextView          screenTitle;
     private TextInputEditText tripTitleEditText;
@@ -60,8 +58,8 @@ public class TripInfoFragment extends Fragment {
             }
         });
 
-        if (getArguments() != null && getArguments().getSerializable(MODIFY_TRIP) != null) {
-            trip = (Trip) getArguments().getSerializable(MODIFY_TRIP);
+        if (getArguments() != null && getArguments().getSerializable(TRIP_KEY) != null) {
+            trip = (Trip) getArguments().getSerializable(TRIP_KEY);
             modifyTrip();
             setHasOptionsMenu(true);
         }

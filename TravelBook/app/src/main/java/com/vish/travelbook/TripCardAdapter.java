@@ -16,7 +16,6 @@ import java.util.List;
 import static com.vish.travelbook.TripDetailActivity.TRIP_KEY;
 import static com.vish.travelbook.TripEditActivity.EDIT_KEY;
 import static com.vish.travelbook.TripEditActivity.EDIT_TRIP;
-import static com.vish.travelbook.TripEditActivity.MODIFY_TRIP_KEY;
 
 public class TripCardAdapter extends RecyclerView.Adapter<TripCardAdapter.TripViewHolder> {
 
@@ -83,7 +82,7 @@ public class TripCardAdapter extends RecyclerView.Adapter<TripCardAdapter.TripVi
         public boolean onLongClick(final View view) {
             Intent intent = new Intent(context, TripEditActivity.class);
             intent.putExtra(EDIT_KEY, EDIT_TRIP);
-            intent.putExtra(MODIFY_TRIP_KEY, trips.get(getAdapterPosition()));
+            intent.putExtra(TRIP_KEY, trips.get(getAdapterPosition()));
             context.startActivity(intent);
             return true;
         }
