@@ -13,11 +13,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import com.vish.travelbook.database.DbHelper;
 import com.vish.travelbook.database.TripContract.TripEntry;
 import com.vish.travelbook.model.Trip;
 import java.util.ArrayList;
 import java.util.List;
-import org.joda.time.DateTime;
 
 import static com.vish.travelbook.TripEditActivity.EDIT_KEY;
 import static com.vish.travelbook.TripEditActivity.EDIT_TRIP;
@@ -28,7 +28,6 @@ public class HomeActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
 
     private List<Trip>      trips;
-    private Cursor          tripsCursor;
     private TripCardAdapter tripCardAdapter;
 
     @Override
@@ -99,19 +98,8 @@ public class HomeActivity extends AppCompatActivity {
     /**
      * Update the list of trips with those fetched from the database
      */
-    public void updateTrips() {
-        if (tripsCursor != null) {
-            trips.clear();
-            while (tripsCursor.moveToNext()) {
-                Trip trip = new Trip();
-                trip.id = tripsCursor.getInt(tripsCursor.getColumnIndex(TripEntry._ID));
-                trip.title = tripsCursor.getString(tripsCursor.getColumnIndex(TripEntry.COLUMN_TRIP_TITLE));
-                trip.startDate = new DateTime(tripsCursor.getLong(tripsCursor.getColumnIndex(TripEntry.COLUMN_TRIP_START)));
-                trip.endDate = new DateTime(tripsCursor.getLong(tripsCursor.getColumnIndex(TripEntry.COLUMN_TRIP_END)));
-                trip.image = tripsCursor.getString(tripsCursor.getColumnIndex(TripEntry.COLUMN_TRIP_IMAGE));
-                trips.add(trip);
-            }
-        }
+    public void updateTrips(Cursor cursor) {
+        trips = new ArrayList<>(DbHelper.cursorToTrips(cursor));
         tripCardAdapter.updateTrips(this, trips);
     }
 
@@ -136,8 +124,7 @@ public class HomeActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Cursor cursor) {
             if (cursor != null) {
-                tripsCursor = cursor;
-                updateTrips();
+                updateTrips(cursor);
             }
             dismissProgressDialog();
         }

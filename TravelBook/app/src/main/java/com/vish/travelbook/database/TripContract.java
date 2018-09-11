@@ -13,11 +13,14 @@ public class TripContract {
 
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_TRIPS).build();
 
-        public static final String TABLE_NAME        = "trips";
-        public static final String COLUMN_TRIP_TITLE = "title";
-        public static final String COLUMN_TRIP_START = "startTime";
-        public static final String COLUMN_TRIP_END   = "endTime";
-        public static final String COLUMN_TRIP_IMAGE = "image";
+        public static final String TABLE_NAME                 = "trips";
+        public static final String COLUMN_TRIP_TITLE          = "title";
+        public static final String COLUMN_TRIP_START          = "startTime";
+        public static final String COLUMN_TRIP_END            = "endTime";
+        public static final String COLUMN_TRIP_IMAGE          = "image";
+        public static final String COLUMN_TRIP_PACKING_LIST   = "packingList";
+        public static final String COLUMN_TRIP_ITINERARY_LIST = "itineraryList";
+        public static final String COLUMN_TRIP_EXPENSES       = "expenses";
     }
 
 }

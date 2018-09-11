@@ -23,6 +23,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
+import com.vish.travelbook.database.DbHelper;
 import com.vish.travelbook.database.TripContract.TripEntry;
 import com.vish.travelbook.model.Trip;
 import com.vish.travelbook.utils.DateTimeUtils;
@@ -140,11 +141,7 @@ public class TripInfoFragment extends Fragment {
      * Save the trip to the database
      */
     private void saveTripToDB() {
-        ContentValues values = new ContentValues();
-        values.put(TripEntry.COLUMN_TRIP_TITLE, trip.title);
-        values.put(TripEntry.COLUMN_TRIP_START, trip.startDate.getMillis());
-        values.put(TripEntry.COLUMN_TRIP_END, trip.endDate.getMillis());
-        values.put(TripEntry.COLUMN_TRIP_IMAGE, trip.getImage());
+        ContentValues values = DbHelper.createTripContentValues(trip);
         Uri uri = getActivity().getContentResolver().insert(TripEntry.CONTENT_URI, values);
         if (uri != null) {
             Snackbar.make(screenTitle, trip.title + " was added to db", Snackbar.LENGTH_SHORT).show();
@@ -157,12 +154,7 @@ public class TripInfoFragment extends Fragment {
      */
     private void updateTripInDB() {
         Uri uri = TripEntry.CONTENT_URI.buildUpon().appendPath(Integer.toString(trip.id)).build();
-
-        ContentValues values = new ContentValues();
-        values.put(TripEntry.COLUMN_TRIP_TITLE, trip.title);
-        values.put(TripEntry.COLUMN_TRIP_START, trip.startDate.getMillis());
-        values.put(TripEntry.COLUMN_TRIP_END, trip.endDate.getMillis());
-        values.put(TripEntry.COLUMN_TRIP_IMAGE, trip.getImage());
+        ContentValues values = DbHelper.createTripContentValues(trip);
         int result = getActivity().getContentResolver().update(uri, values, null, null);
         if (result > 0) {
             Snackbar.make(screenTitle, trip.title + " was updated in db", Snackbar.LENGTH_SHORT).show();
