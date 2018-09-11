@@ -9,7 +9,7 @@ import com.vish.travelbook.model.Trip;
 
 import static com.vish.travelbook.TripDetailActivity.TRIP_KEY;
 
-public class TripEditActivity extends AppCompatActivity {
+public class TripEditActivity extends BaseActivity {
 
     public static final String EDIT_KEY             = "edit_key";
     public static final String EDIT_TRIP            = "edit_trip";
@@ -18,7 +18,6 @@ public class TripEditActivity extends AppCompatActivity {
     public static final String EDIT_EXPENSE         = "edit_expense";
 
     private String editType = "";
-    private Trip   trip;
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {

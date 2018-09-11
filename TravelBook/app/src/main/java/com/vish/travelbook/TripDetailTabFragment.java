@@ -1,20 +1,25 @@
 package com.vish.travelbook;
 
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.vish.travelbook.database.DbHelper;
+import com.vish.travelbook.database.TripContract;
 import com.vish.travelbook.model.Trip;
 
 import static com.vish.travelbook.TripDetailActivity.TRIP_KEY;
 
-public class TripDetailTabFragment extends Fragment {
+public class TripDetailTabFragment extends BaseFragment {
 
     public static final String TAB_KEY       = "tab_key";
     public static final String PACKING_TAB   = "packing_tab";
@@ -23,8 +28,7 @@ public class TripDetailTabFragment extends Fragment {
 
     private RecyclerView recyclerView;
 
-    private Trip               trip;
-    private String             tabType;
+    private String tabType;
 
     @Nullable
     @Override
@@ -35,11 +39,17 @@ public class TripDetailTabFragment extends Fragment {
             trip = (Trip) getArguments().getSerializable(TRIP_KEY);
             tabType = getArguments().getString(TAB_KEY);
         }
-        populateData();
+        //populateData();
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
 
         return view;
+    }
+
+    @Override public void onResume() {
+        super.onResume();
+        showProgressDialog();
+        new GetTripTask().execute();
     }
 
     private void populateData() {
@@ -62,19 +72,31 @@ public class TripDetailTabFragment extends Fragment {
         }
     }
 
-    public void loadPackingList() {
-        TripPackingAdapter tripPackingAdapter = new TripPackingAdapter(getContext(), trip);
-        tripPackingAdapter.updateTrip(trip);
-        recyclerView.setAdapter(tripPackingAdapter);
-    }
+    /**
+     * Get all trips from the database
+     */
+    public class GetTripTask extends AsyncTask<Void, Void, Cursor> {
 
-    public void loadItinerary() {
-        TripItineraryAdapter tripItineraryAdapter = new TripItineraryAdapter(getContext(), trip);
-        tripItineraryAdapter.updateTrip(trip);
-        recyclerView.setAdapter(tripItineraryAdapter);
-    }
+        @Override
+        protected Cursor doInBackground(Void... voids) {
+            Cursor cursor;
+            try {
+                Uri uri = TripContract.TripEntry.CONTENT_URI.buildUpon().appendPath(Integer.toString(trip.id)).build();
+                cursor = getActivity().getContentResolver().query(uri, null, null, null, null);
+            } catch (Exception exception) {
+                Log.e(HomeActivity.class.getSimpleName(), "Failed to load data");
+                return null;
+            }
+            return cursor;
+        }
 
-    public void loadExpenses() {
-
+        @Override
+        protected void onPostExecute(Cursor cursor) {
+            if (cursor != null) {
+                trip = DbHelper.cursorToTrips(cursor).get(0);
+                populateData();
+            }
+            dismissProgressDialog();
+        }
     }
 }

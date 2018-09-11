@@ -1,6 +1,12 @@
 package com.vish.travelbook;
 
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -9,6 +15,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
+import com.vish.travelbook.database.DbHelper;
+import com.vish.travelbook.database.TripContract;
 import com.vish.travelbook.model.Trip;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +25,10 @@ import static com.vish.travelbook.TripDetailTabFragment.EXPENSES_TAB;
 import static com.vish.travelbook.TripDetailTabFragment.ITINERARY_TAB;
 import static com.vish.travelbook.TripDetailTabFragment.PACKING_TAB;
 import static com.vish.travelbook.TripDetailTabFragment.TAB_KEY;
+import static com.vish.travelbook.TripEditActivity.EDIT_KEY;
+import static com.vish.travelbook.TripEditActivity.EDIT_PACKING_ITEM;
 
-public class TripDetailActivity extends AppCompatActivity {
+public class TripDetailActivity extends BaseActivity {
 
     public static final String TRIP_KEY = "TRIP_KEY";
 
@@ -26,7 +36,8 @@ public class TripDetailActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private Trip      trip;
 
-    @Override protected void onCreate(@Nullable final Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_detail);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -37,12 +48,28 @@ public class TripDetailActivity extends AppCompatActivity {
             trip = (Trip) getIntent().getSerializableExtra(TRIP_KEY);
         }
 
+        findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onFABClick();
+            }
+        });
+
         viewPager = findViewById(R.id.trip_details_viewpager);
         setupViewPager(viewPager);
 
         tabLayout = findViewById(R.id.trip_details_tablayout);
         tabLayout.setupWithViewPager(viewPager);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new GetTripTask().execute();
+    }
+
+    private void onFABClick() {
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -64,7 +91,7 @@ public class TripDetailActivity extends AppCompatActivity {
         return tripDetailTabFragment;
     }
 
-    public class TripDetailsPagerAdapter extends FragmentPagerAdapter {
+    private class TripDetailsPagerAdapter extends FragmentPagerAdapter {
 
         private List<Fragment> tabFragments = new ArrayList<>();
         private List<String>   tabTitles    = new ArrayList<>();

@@ -1,15 +1,11 @@
 package com.vish.travelbook;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -22,10 +18,9 @@ import java.util.List;
 import static com.vish.travelbook.TripEditActivity.EDIT_KEY;
 import static com.vish.travelbook.TripEditActivity.EDIT_TRIP;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends BaseActivity {
 
-    private RecyclerView   recyclerView;
-    private ProgressDialog progressDialog;
+    private RecyclerView recyclerView;
 
     private List<Trip>      trips;
     private TripCardAdapter tripCardAdapter;
@@ -58,7 +53,8 @@ public class HomeActivity extends AppCompatActivity {
         showProgressDialog();
     }
 
-    @Override protected void onResume() {
+    @Override
+    protected void onResume() {
         super.onResume();
         new GetAllTripsTask().execute();
     }
@@ -70,29 +66,6 @@ public class HomeActivity extends AppCompatActivity {
         Intent intent = new Intent(this, TripEditActivity.class);
         intent.putExtra(EDIT_KEY, EDIT_TRIP);
         startActivity(intent);
-    }
-
-    /**
-     * Show the progress dialog spinner
-     */
-    protected void showProgressDialog() {
-        if (progressDialog == null || !progressDialog.isShowing()) {
-            progressDialog = new ProgressDialog(this);
-            progressDialog.setIndeterminate(true);
-            progressDialog.setCancelable(false);
-            progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            progressDialog.show();
-            progressDialog.setContentView(getLayoutInflater().inflate(R.layout.progress_spinner, null));
-        }
-    }
-
-    /**
-     * Dismiss the progress dialog spinner
-     */
-    protected void dismissProgressDialog() {
-        if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-        }
     }
 
     /**

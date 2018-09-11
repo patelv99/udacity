@@ -1,14 +1,8 @@
 package com.vish.travelbook;
 
-import android.app.ProgressDialog;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,26 +14,21 @@ import android.widget.EditText;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
-import com.vish.travelbook.database.DbHelper;
-import com.vish.travelbook.database.TripContract.TripEntry;
 import com.vish.travelbook.model.Trip;
 import com.vish.travelbook.utils.DateTimeUtils;
 
 import static com.vish.travelbook.TripDetailActivity.TRIP_KEY;
 
-public class TripInfoFragment extends Fragment {
+public class TripInfoFragment extends BaseFragment {
 
-    private ProgressDialog    progressDialog;
     private TextView          screenTitle;
     private TextInputEditText tripTitleEditText;
     private EditText          tripStartEditText;
     private EditText          tripEndEditText;
     private Button            tripSaveButton;
 
-    private Trip    trip;
     private boolean modifying = false;
 
     @Nullable
@@ -78,7 +67,9 @@ public class TripInfoFragment extends Fragment {
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_delete:
-                deleteTrip();
+                showProgressDialog();
+                deleteTrip(screenTitle);
+                dismissProgressDialog();
                 getActivity().finish();
                 break;
         }
@@ -119,9 +110,9 @@ public class TripInfoFragment extends Fragment {
         showProgressDialog();
         if (validateTripInfo()) {
             if (modifying) {
-                updateTripInDB();
+                updateTripInDB(screenTitle);
             } else {
-                saveTripToDB();
+                saveTripToDB(screenTitle);
             }
             dismissProgressDialog();
 
@@ -135,65 +126,4 @@ public class TripInfoFragment extends Fragment {
         }
     }
 
-    /**
-     * Save the trip to the database
-     */
-    private void saveTripToDB() {
-        ContentValues values = DbHelper.createTripContentValues(trip);
-        Uri uri = getActivity().getContentResolver().insert(TripEntry.CONTENT_URI, values);
-        if (uri != null) {
-            Snackbar.make(screenTitle, trip.title + " was added to db", Snackbar.LENGTH_SHORT).show();
-            Log.i(getClass().getSimpleName(), trip.title + " was added to db");
-        }
-    }
-
-    /**
-     * Update the trip in the database
-     */
-    private void updateTripInDB() {
-        Uri uri = TripEntry.CONTENT_URI.buildUpon().appendPath(Integer.toString(trip.id)).build();
-        ContentValues values = DbHelper.createTripContentValues(trip);
-        int result = getActivity().getContentResolver().update(uri, values, null, null);
-        if (result > 0) {
-            Snackbar.make(screenTitle, trip.title + " was updated in db", Snackbar.LENGTH_SHORT).show();
-            Log.i(getClass().getSimpleName(), trip.title + " was updated in db");
-        }
-    }
-
-    /**
-     * Delete the selected trip
-     */
-    private void deleteTrip() {
-        Uri uri = TripEntry.CONTENT_URI.buildUpon().appendPath(Integer.toString(trip.id)).build();
-
-        int result = getActivity().getContentResolver().delete(uri, null, null);
-        if (result > 0) {
-            Snackbar.make(screenTitle, trip.title + "was deleted from the db", Snackbar.LENGTH_SHORT).show();
-            Log.i(getClass().getSimpleName(), trip.title + " was deleted from the db");
-
-        }
-    }
-
-    /**
-     * Show the progress dialog spinner
-     */
-    private void showProgressDialog() {
-        if (progressDialog == null || !progressDialog.isShowing()) {
-            progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setIndeterminate(true);
-            progressDialog.setCancelable(false);
-            progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            progressDialog.show();
-            progressDialog.setContentView(getLayoutInflater().inflate(R.layout.progress_spinner, null));
-        }
-    }
-
-    /**
-     * Dismiss the progress dialog spinner
-     */
-    private void dismissProgressDialog() {
-        if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-        }
-    }
 }
