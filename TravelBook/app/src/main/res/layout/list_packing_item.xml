@@ -5,7 +5,10 @@
     android:layout_height="wrap_content"
     android:id="@+id/list_packing_item"
     android:paddingTop="5dp"
-    android:paddingBottom="5dp">
+    android:paddingBottom="5dp"
+    android:clickable="true"
+    android:longClickable="true"
+    android:focusable="true">
 
     <TextView
         android:id="@+id/packing_item_quantity"

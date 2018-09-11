@@ -15,7 +15,7 @@ import com.vish.travelbook.model.Trip;
 public abstract class BaseActivity extends AppCompatActivity {
 
     private ProgressDialog progressDialog;
-    private Trip           trip;
+    public  Trip           trip;
 
     /**
      * Show the progress dialog spinner
@@ -41,7 +41,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     * Get all trips from the database
+     * Get specific trip from the database
      */
     public class GetTripTask extends AsyncTask<Void, Void, Cursor> {
 

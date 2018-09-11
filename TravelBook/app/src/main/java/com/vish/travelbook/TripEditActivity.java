@@ -2,10 +2,8 @@ package com.vish.travelbook;
 
 import android.os.Bundle;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import com.vish.travelbook.model.Trip;
 
 import static com.vish.travelbook.TripDetailActivity.TRIP_KEY;
 

@@ -45,7 +45,7 @@ public class TripPackingAdapter extends RecyclerView.Adapter<TripPackingAdapter.
         }
     }
 
-    public class PackingItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class PackingItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         public TextView quantity;
         public TextView item;
@@ -56,8 +56,16 @@ public class TripPackingAdapter extends RecyclerView.Adapter<TripPackingAdapter.
             item = view.findViewById(R.id.packing_item_title);
         }
 
-        @Override public void onClick(final View view) {
+        @Override
+        public void onClick(final View view) {
             //TODO open edit packing item
+        }
+
+        @Override
+        public boolean onLongClick(final View view) {
+            //TODO open dialog to delete
+            //TODO change this to swipe to delete
+            return false;
         }
     }
 }
