@@ -1,5 +1,6 @@
 package com.vish.travelbook;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -10,7 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.DatePicker;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,6 +19,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.vish.travelbook.model.Trip;
 import com.vish.travelbook.utils.DateTimeUtils;
+import org.joda.time.DateTime;
 
 import static com.vish.travelbook.TripDetailActivity.TRIP_KEY;
 
@@ -25,11 +27,13 @@ public class TripInfoFragment extends BaseFragment {
 
     private TextView          screenTitle;
     private TextInputEditText tripTitleEditText;
-    private EditText          tripStartEditText;
-    private EditText          tripEndEditText;
+    private TextInputEditText tripStartEditText;
+    private TextInputEditText tripEndEditText;
     private Button            tripSaveButton;
 
-    private boolean modifying = false;
+    private boolean  modifying     = false;
+    private DateTime tripStartDate = DateTime.now();
+    private DateTime tripEndDate   = DateTime.now();
 
     @Nullable
     @Override
@@ -52,7 +56,46 @@ public class TripInfoFragment extends BaseFragment {
             modifyTrip();
             setHasOptionsMenu(true);
         }
+
+        tripStartEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                setStartDate();
+            }
+        });
+        tripEndEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                setEndDate();
+            }
+        });
+
         return view;
+    }
+
+    private void setStartDate() {
+        DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(final DatePicker datePicker, final int year, final int month, final int day) {
+                DateTime startDate = new DateTime().withDate(year, month + 1, day);
+                startDate.withTimeAtStartOfDay();
+                tripStartDate = startDate;
+                tripStartEditText.setText(DateTimeUtils.getNumericalDate(startDate));
+            }
+        };
+        showDatePicker(getActivity(), tripStartDate, onDateSetListener);
+    }
+
+    private void setEndDate() {
+        DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(final DatePicker datePicker, final int year, final int month, final int day) {
+                DateTime endDate = new DateTime().withDate(year, month + 1, day);
+                endDate.withTimeAtStartOfDay();
+                tripEndEditText.setText(DateTimeUtils.getNumericalDate(endDate));
+            }
+        };
+        showDatePicker(getActivity(), tripEndDate, onDateSetListener);
     }
 
     @Override

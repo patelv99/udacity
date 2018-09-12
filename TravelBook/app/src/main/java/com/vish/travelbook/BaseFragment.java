@@ -1,8 +1,10 @@
 package com.vish.travelbook;
 
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -15,11 +17,18 @@ import com.google.android.material.snackbar.Snackbar;
 import com.vish.travelbook.database.DbHelper;
 import com.vish.travelbook.database.TripContract;
 import com.vish.travelbook.model.Trip;
+import org.joda.time.DateTime;
 
 public abstract class BaseFragment extends Fragment {
 
     private ProgressDialog progressDialog;
     public  Trip           trip;
+
+    public void showDatePicker(Context context, DateTime date, DatePickerDialog.OnDateSetListener onDateSetListener) {
+        DatePickerDialog datePicker = new DatePickerDialog(context, onDateSetListener,
+                                                           date.getYear(), date.getMonthOfYear() - 1, date.getDayOfMonth());
+        datePicker.show();
+    }
 
     /**
      * Save the trip to the database
