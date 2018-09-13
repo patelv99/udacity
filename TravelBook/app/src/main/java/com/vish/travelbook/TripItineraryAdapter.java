@@ -27,6 +27,8 @@ public class TripItineraryAdapter extends RecyclerView.Adapter<TripItineraryAdap
     }
 
     @NonNull @Override public ItineraryEventViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
+    @NonNull @Override
+    public ItineraryEventViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
         return new ItineraryEventViewHolder(LayoutInflater.from(context).inflate(R.layout.list_itinerary_event, parent, false));
     }
 

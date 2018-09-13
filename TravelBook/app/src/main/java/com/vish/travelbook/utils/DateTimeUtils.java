@@ -11,8 +11,12 @@ public class DateTimeUtils {
     public static final DateTimeFormatter TEXT_DATE_FORMAT            = DateTimeFormat.forPattern("MMM dd, yyyy");
     public static final DateTimeFormatter TIME_FORMAT                 = DateTimeFormat.forPattern("h:mm aa");
 
-    public static String getTripDurationDates(DateTime startDate, DateTime endDate) {
-        return getTextDate(startDate) + " - " + getTextDate(endDate);
+    public static String getDatesDuration(DateTime startDate, DateTime endDate) {
+        if (startDate.getDayOfYear() == endDate.getDayOfYear()) {
+            return getTextDate(startDate);
+        } else {
+            return getTextDate(startDate) + " - " + getTextDate(endDate);
+        }
     }
 
     public static String getNumericalDate(DateTime dateTime) {
@@ -27,7 +31,8 @@ public class DateTimeUtils {
         return TEXT_DATE_FORMAT.print(dateTime);
     }
 
-    public static String getEventDurationTime(DateTime startTime, DateTime endTime) {
+    public static String getTimeDuration(DateTime startTime, DateTime endTime) {
+
         return getTime(startTime) + " - " + getTime(endTime);
     }
 

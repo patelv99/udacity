@@ -42,7 +42,7 @@ public class TripCardAdapter extends RecyclerView.Adapter<TripCardAdapter.TripVi
     public void onBindViewHolder(@NonNull final TripViewHolder holder, final int position) {
         Trip trip = trips.get(position);
         holder.tripTitle.setText(trip.title);
-        holder.tripDate.setText(DateTimeUtils.getTripDurationDates(trip.startDate, trip.endDate));
+        holder.tripDate.setText(DateTimeUtils.getDatesDuration(trip.startDate, trip.endDate));
         holder.thumbnail.setImageResource(android.R.drawable.star_on);
     }
 

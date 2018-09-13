@@ -73,19 +73,24 @@ public class TripInfoFragment extends BaseFragment {
         return view;
     }
 
+    /**
+     * Set start date for the trip
+     */
     private void setStartDate() {
         DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(final DatePicker datePicker, final int year, final int month, final int day) {
                 DateTime startDate = new DateTime().withDate(year, month + 1, day);
                 startDate.withTimeAtStartOfDay();
-                tripStartDate = startDate;
                 tripStartEditText.setText(DateTimeUtils.getNumericalDate(startDate));
             }
         };
         showDatePicker(getActivity(), tripStartDate, onDateSetListener);
     }
 
+    /**
+     * Set end date for the trip
+     */
     private void setEndDate() {
         DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override

@@ -24,6 +24,9 @@ public abstract class BaseFragment extends Fragment {
     private ProgressDialog progressDialog;
     public  Trip           trip;
 
+    /**
+     * Show DatePickerDialog
+     */
     public void showDatePicker(Context context, DateTime date, DatePickerDialog.OnDateSetListener onDateSetListener) {
         DatePickerDialog datePicker = new DatePickerDialog(context, onDateSetListener,
                                                            date.getYear(), date.getMonthOfYear() - 1, date.getDayOfMonth());
