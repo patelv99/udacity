@@ -6,6 +6,10 @@
     <string name="save">Save</string>
     <string name="delete">Delete</string>
 
+    <string name="start_date">Start Date</string>
+    <string name="end_date">End Date</string>
+    <string name="start_time">Start Time</string>
+    <string name="end_time">End Time</string>
 
     <!-- Main Tabs -->
     <string name="packing_tab">Packing</string>
@@ -16,8 +20,6 @@
     <string name="create_trip">Create your trip</string>
     <string name="modify_trip">Modify your trip</string>
     <string name="trip_title">Trip Title</string>
-    <string name="trip_start">Start Date</string>
-    <string name="trip_end">End Date</string>
     <string name="trip_image">Upload an image (Optional)</string>
     <string name="invalid_trip_info">Please enter more information about the trip.</string>
 
@@ -27,7 +29,13 @@
     <string name="packing_quantity">Quantity</string>
     <string name="packing_item">Item</string>
     <string name="invalid_packing_item">Please enter more information about the item.</string>
-    <string name="packing_item_error">There was an error adding the item to the packing list. Please try again.</string>
+    <string name="packing_item_error">There was an error adding the item to your packing list. Please try again.</string>
+
+    <!-- Itinerary Events  -->
+    <string name="add_itinerary_event">Add an event to your itinerary</string>
+    <string name="event_title">Event Title</string>
+    <string name="invalid_itinerary_event">Please enter more information about the event.</string>
+    <string name="itinerary_event_error">There was an error adding the event to your itinerary. Please try again.</string>
 
 
 </resources>

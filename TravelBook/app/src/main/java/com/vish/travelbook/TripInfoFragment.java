@@ -144,8 +144,8 @@ public class TripInfoFragment extends BaseFragment {
             trip = new Trip();
         }
         trip.title = tripTitleEditText.getText().toString();
-        trip.startDate = DateTimeUtils.NUMERICAL_DATE_SHORT_FORMAT.parseDateTime(tripStartEditText.getText().toString());
-        trip.endDate = DateTimeUtils.NUMERICAL_DATE_SHORT_FORMAT.parseDateTime(tripEndEditText.getText().toString());
+        trip.startDate = DateTimeUtils.parseNumericalShortDate(tripStartEditText.getText().toString());
+        trip.endDate = DateTimeUtils.parseNumericalShortDate(tripEndEditText.getText().toString());
 
         return !TextUtils.isEmpty(trip.title) && trip.startDate.isBefore(trip.endDate);
     }

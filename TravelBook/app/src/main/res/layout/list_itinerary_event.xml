@@ -12,6 +12,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
+        android:maxLines="1"
+        android:ellipsize="end"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@id/itinerary_event_time"
@@ -22,17 +24,27 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
+        android:maxLines="1"
+        android:ellipsize="end"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/itinerary_event_title"
         app:layout_constraintEnd_toStartOf="@id/itinerary_event_time"
         style="@style/DetailBody"/>
 
     <TextView
-        android:id="@+id/itinerary_event_time"
+        android:id="@+id/itinerary_event_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        style="@style/DetailSubTitle"/>
+
+    <TextView
+        android:id="@+id/itinerary_event_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/itinerary_event_date"
         app:layout_constraintBottom_toBottomOf="parent"
         style="@style/DetailSubTitle"/>
 

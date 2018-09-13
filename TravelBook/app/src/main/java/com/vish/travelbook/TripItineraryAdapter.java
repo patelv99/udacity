@@ -26,7 +26,6 @@ public class TripItineraryAdapter extends RecyclerView.Adapter<TripItineraryAdap
         notifyDataSetChanged();
     }
 
-    @NonNull @Override public ItineraryEventViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
     @NonNull @Override
     public ItineraryEventViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
         return new ItineraryEventViewHolder(LayoutInflater.from(context).inflate(R.layout.list_itinerary_event, parent, false));
@@ -37,7 +36,8 @@ public class TripItineraryAdapter extends RecyclerView.Adapter<TripItineraryAdap
             ItineraryEvent itineraryEvent = trip.events.get(position);
             holder.title.setText(itineraryEvent.title);
             holder.description.setText(itineraryEvent.description);
-            holder.time.setText(DateTimeUtils.getEventDurationTime(itineraryEvent.startTime, itineraryEvent.endTime));
+            holder.date.setText(DateTimeUtils.getEventDatesDuration(itineraryEvent.startTime, itineraryEvent.endTime));
+            holder.time.setText(DateTimeUtils.getTimeDuration(itineraryEvent.startTime, itineraryEvent.endTime));
         }
     }
 
@@ -53,12 +53,14 @@ public class TripItineraryAdapter extends RecyclerView.Adapter<TripItineraryAdap
 
         public TextView title;
         public TextView description;
+        public TextView date;
         public TextView time;
 
         public ItineraryEventViewHolder(View view) {
             super(view);
             title = view.findViewById(R.id.itinerary_event_title);
             description = view.findViewById(R.id.itinerary_event_description);
+            date = view.findViewById(R.id.itinerary_event_date);
             time = view.findViewById(R.id.itinerary_event_time);
         }
 

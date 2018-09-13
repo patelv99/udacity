@@ -39,6 +39,7 @@ public class TripEditActivity extends BaseActivity {
                 fragment = new PackingItemDetailFragment();
                 break;
             case EDIT_ITINERARY_EVENT:
+                fragment = new ItineraryEventDetailFragment();
                 break;
             case EDIT_EXPENSE:
                 break;

@@ -7,12 +7,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.internal.bind.DateTypeAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.vish.travelbook.database.TripContract.TripEntry;
 import com.vish.travelbook.model.Expense;
 import com.vish.travelbook.model.ItineraryEvent;
 import com.vish.travelbook.model.PackingItem;
 import com.vish.travelbook.model.Trip;
+import com.vish.travelbook.utils.DateTimeTypeAdapter;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,9 +26,12 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME    = "trips.db";
     private static final int    DATABASE_VERSION = 1;
 
-    private static Type packingItemTypeToken    = new TypeToken<List<PackingItem>>() {}.getType();
-    private static Type itineraryEventTypeToken = new TypeToken<List<ItineraryEvent>>() {}.getType();
-    private static Type expenseTypeToken        = new TypeToken<List<Expense>>() {}.getType();
+    private static Type packingItemTypeToken    = new TypeToken<List<PackingItem>>() {
+    }.getType();
+    private static Type itineraryEventTypeToken = new TypeToken<List<ItineraryEvent>>() {
+    }.getType();
+    private static Type expenseTypeToken        = new TypeToken<List<Expense>>() {
+    }.getType();
 
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -57,7 +63,7 @@ public class DbHelper extends SQLiteOpenHelper {
      * Create a set of ContentValues from a given Trip
      */
     public static ContentValues createTripContentValues(Trip trip) {
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().registerTypeAdapter(DateTime.class, new DateTimeTypeAdapter()).create();
 
         ContentValues values = new ContentValues();
         values.put(TripEntry.COLUMN_TRIP_TITLE, trip.title);
@@ -80,7 +86,8 @@ public class DbHelper extends SQLiteOpenHelper {
      * Convert a Cursor with Trips into a List of Trips
      */
     public static List<Trip> cursorToTrips(Cursor tripsCursor) {
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().registerTypeAdapter(DateTime.class, new DateTimeTypeAdapter()).create();
+
         List<Trip> trips = new ArrayList<>();
         if (tripsCursor != null) {
             while (tripsCursor.moveToNext()) {

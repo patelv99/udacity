@@ -2,6 +2,7 @@ package com.vish.travelbook;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -31,6 +32,15 @@ public abstract class BaseFragment extends Fragment {
         DatePickerDialog datePicker = new DatePickerDialog(context, onDateSetListener,
                                                            date.getYear(), date.getMonthOfYear() - 1, date.getDayOfMonth());
         datePicker.show();
+    }
+
+    /**
+     * Show TimePickerDialog
+     */
+    public void showTimePicker(Context context, DateTime date, TimePickerDialog.OnTimeSetListener onTimeSetListener) {
+        TimePickerDialog timePicker = new TimePickerDialog(context, onTimeSetListener,
+                                                           date.getHourOfDay(), date.getMinuteOfHour(), false);
+        timePicker.show();
     }
 
     /**

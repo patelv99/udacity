@@ -18,6 +18,8 @@ import static com.vish.travelbook.TripDetailTabFragment.EXPENSES_TAB;
 import static com.vish.travelbook.TripDetailTabFragment.ITINERARY_TAB;
 import static com.vish.travelbook.TripDetailTabFragment.PACKING_TAB;
 import static com.vish.travelbook.TripDetailTabFragment.TAB_KEY;
+import static com.vish.travelbook.TripEditActivity.EDIT_EXPENSE;
+import static com.vish.travelbook.TripEditActivity.EDIT_ITINERARY_EVENT;
 import static com.vish.travelbook.TripEditActivity.EDIT_KEY;
 import static com.vish.travelbook.TripEditActivity.EDIT_PACKING_ITEM;
 
@@ -64,7 +66,19 @@ public class TripDetailActivity extends BaseActivity {
     private void onFABClick() {
         Intent intent = new Intent(this, TripEditActivity.class);
         intent.putExtra(TRIP_KEY, trip);
-        intent.putExtra(EDIT_KEY, EDIT_PACKING_ITEM);
+        switch (tabLayout.getSelectedTabPosition()) {
+            case 0:
+                intent.putExtra(EDIT_KEY, EDIT_PACKING_ITEM);
+                break;
+            case 1:
+                intent.putExtra(EDIT_KEY, EDIT_ITINERARY_EVENT);
+                break;
+            case 2:
+                intent.putExtra(EDIT_KEY, EDIT_EXPENSE);
+                break;
+            default:
+                break;
+        }
         startActivity(intent);
     }
 
