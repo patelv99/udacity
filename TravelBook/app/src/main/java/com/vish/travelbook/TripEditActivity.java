@@ -30,7 +30,7 @@ public class TripEditActivity extends BaseActivity {
 
         }
 
-        Fragment fragment = new TripInfoFragment();
+        Fragment fragment;
         switch (editType) {
             case EDIT_TRIP:
                 fragment = new TripInfoFragment();
@@ -42,6 +42,7 @@ public class TripEditActivity extends BaseActivity {
                 fragment = new ItineraryEventDetailFragment();
                 break;
             case EDIT_EXPENSE:
+                fragment = new ExpenseDetailFragment();
                 break;
             default:
                 fragment = new TripInfoFragment();

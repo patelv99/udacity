@@ -34,7 +34,7 @@ public class TripExpenseAdapter extends RecyclerView.Adapter<TripExpenseAdapter.
         if (!trip.expenses.isEmpty()) {
             Expense expense = trip.expenses.get(position);
             holder.description.setText(expense.description);
-            holder.amount.setText(Double.toString(expense.amount));
+            holder.amount.setText(context.getString(R.string.dollar_sign, expense.amount));
             holder.dateTime.setText(DateTimeUtils.getNumericalShortDate(expense.dateTime));
         }
     }
