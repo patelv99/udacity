@@ -1,6 +1,7 @@
 package com.vish.travelbook;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.vish.travelbook.model.PackingItem;
 import com.vish.travelbook.model.Trip;
+
+import static com.vish.travelbook.PackingItemDetailFragment.PACKING_ITEM_KEY;
+import static com.vish.travelbook.TripDetailActivity.TRIP_KEY;
+import static com.vish.travelbook.TripEditActivity.EDIT_KEY;
+import static com.vish.travelbook.TripEditActivity.EDIT_PACKING_ITEM;
 
 public class TripPackingAdapter extends RecyclerView.Adapter<TripPackingAdapter.PackingItemViewHolder> {
 
@@ -52,13 +58,18 @@ public class TripPackingAdapter extends RecyclerView.Adapter<TripPackingAdapter.
 
         public PackingItemViewHolder(View view) {
             super(view);
+            view.setOnClickListener(this);
             quantity = view.findViewById(R.id.packing_item_quantity);
             item = view.findViewById(R.id.packing_item_title);
         }
 
         @Override
         public void onClick(final View view) {
-            //TODO open edit packing item
+            Intent intent = new Intent(context, TripEditActivity.class);
+            intent.putExtra(EDIT_KEY, EDIT_PACKING_ITEM);
+            intent.putExtra(TRIP_KEY, trip);
+            intent.putExtra(PACKING_ITEM_KEY, trip.packingItems.get(getAdapterPosition()));
+            context.startActivity(intent);
         }
 
         @Override

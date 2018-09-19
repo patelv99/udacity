@@ -16,7 +16,8 @@ import android.view.View;
 import androidx.fragment.app.Fragment;
 import com.google.android.material.snackbar.Snackbar;
 import com.vish.travelbook.database.DbHelper;
-import com.vish.travelbook.database.TripContract;
+import com.vish.travelbook.database.TripContract.TripEntry;
+import com.vish.travelbook.model.PackingItem;
 import com.vish.travelbook.model.Trip;
 import org.joda.time.DateTime;
 
@@ -48,7 +49,7 @@ public abstract class BaseFragment extends Fragment {
      */
     public void saveTripToDB(View view) {
         ContentValues values = DbHelper.createTripContentValues(trip);
-        Uri uri = getActivity().getContentResolver().insert(TripContract.TripEntry.CONTENT_URI, values);
+        Uri uri = getActivity().getContentResolver().insert(TripEntry.CONTENT_URI, values);
         if (uri != null) {
             Snackbar.make(view, trip.title + " was added to db", Snackbar.LENGTH_SHORT).show();
             Log.i(getClass().getSimpleName(), trip.title + " was added to db");
@@ -60,7 +61,7 @@ public abstract class BaseFragment extends Fragment {
      * Update the trip in the database
      */
     public void updateTripInDB(View view) {
-        Uri uri = TripContract.TripEntry.CONTENT_URI.buildUpon().appendPath(Integer.toString(trip.id)).build();
+        Uri uri = TripEntry.CONTENT_URI.buildUpon().appendPath(Integer.toString(trip.id)).build();
         ContentValues values = DbHelper.createTripContentValues(trip);
         int result = getActivity().getContentResolver().update(uri, values, null, null);
         if (result > 0) {
@@ -73,7 +74,7 @@ public abstract class BaseFragment extends Fragment {
      * Delete the selected trip
      */
     public void deleteTrip(View view) {
-        Uri uri = TripContract.TripEntry.CONTENT_URI.buildUpon().appendPath(Integer.toString(trip.id)).build();
+        Uri uri = TripEntry.CONTENT_URI.buildUpon().appendPath(Integer.toString(trip.id)).build();
 
         int result = getActivity().getContentResolver().delete(uri, null, null);
         if (result > 0) {
@@ -81,6 +82,14 @@ public abstract class BaseFragment extends Fragment {
             Log.i(getClass().getSimpleName(), trip.title + " was deleted from the db");
 
         }
+    }
+
+    /**
+     * Delete the selected packing item
+     */
+    public void deletePackingItem(View view, PackingItem item) {
+        trip.packingItems.remove(item);
+        updateTripInDB(view);
     }
 
     /**
@@ -115,7 +124,7 @@ public abstract class BaseFragment extends Fragment {
         protected Cursor doInBackground(Void... voids) {
             Cursor cursor;
             try {
-                Uri uri = TripContract.TripEntry.CONTENT_URI.buildUpon().appendPath(Integer.toString(trip.id)).build();
+                Uri uri = TripEntry.CONTENT_URI.buildUpon().appendPath(Integer.toString(trip.id)).build();
                 cursor = getActivity().getContentResolver().query(uri, null, null, null, null);
             } catch (Exception exception) {
                 Log.e(HomeActivity.class.getSimpleName(), "Failed to load data");
