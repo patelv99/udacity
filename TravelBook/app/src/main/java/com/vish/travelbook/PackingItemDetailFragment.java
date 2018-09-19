@@ -3,6 +3,9 @@ package com.vish.travelbook;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -18,13 +21,17 @@ import static com.vish.travelbook.TripDetailActivity.TRIP_KEY;
 
 public class PackingItemDetailFragment extends BaseFragment {
 
+    public static final String PACKING_ITEM_KEY = "packing_item_key";
+
     private TextView title;
     private EditText quantityEditText;
     private EditText itemEditText;
     private Button   saveButton;
 
-    private int    quantity;
-    private String item;
+    private int         quantity;
+    private String      item;
+    private boolean     modifying   = false;
+    private PackingItem packingItem = new PackingItem();
 
     @Nullable
     @Override
@@ -43,16 +50,61 @@ public class PackingItemDetailFragment extends BaseFragment {
 
         if (getArguments() != null && getArguments().getSerializable(TRIP_KEY) != null) {
             trip = (Trip) getArguments().getSerializable(TRIP_KEY);
+            if (getArguments().getSerializable(PACKING_ITEM_KEY) != null) {
+                packingItem = (PackingItem) getArguments().getSerializable(PACKING_ITEM_KEY);
+                modifyPackingItem();
+                setHasOptionsMenu(true);
+            }
         }
-
         return view;
     }
 
+    @Override
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        if (modifying) {
+            inflater.inflate(R.menu.menu_trip, menu);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_delete:
+                showProgressDialog();
+                deletePackingItem(title, packingItem);
+                dismissProgressDialog();
+                getActivity().finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Modify the selected packing item
+     */
+    private void modifyPackingItem() {
+        modifying = true;
+        itemEditText.setText(packingItem.item);
+        quantityEditText.setText(Integer.toString(packingItem.quantity));
+    }
+
+    /**
+     * Save the packing item and trip on save click
+     */
     private void onSaveClick() {
         if (validateItem()) {
-            PackingItem packingItem = new PackingItem(item, quantity);
-            trip.packingItems.add(packingItem);
             showProgressDialog();
+            if (modifying) {
+                int index = trip.packingItems.indexOf(packingItem);
+                packingItem.item = item;
+                packingItem.quantity = quantity;
+                trip.packingItems.set(index, packingItem);
+            } else {
+                packingItem.item = item;
+                packingItem.quantity = quantity;
+                trip.packingItems.add(packingItem);
+            }
             updateTripInDB(title);
             dismissProgressDialog();
             getActivity().finish();
