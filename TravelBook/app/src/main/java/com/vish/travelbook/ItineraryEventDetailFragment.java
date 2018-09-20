@@ -5,6 +5,9 @@ import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -16,6 +19,7 @@ import androidx.annotation.Nullable;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.vish.travelbook.model.ItineraryEvent;
+import com.vish.travelbook.model.PackingItem;
 import com.vish.travelbook.model.Trip;
 import com.vish.travelbook.utils.DateTimeUtils;
 import org.joda.time.DateTime;
@@ -23,6 +27,8 @@ import org.joda.time.DateTime;
 import static com.vish.travelbook.TripDetailActivity.TRIP_KEY;
 
 public class ItineraryEventDetailFragment extends BaseFragment {
+
+    public static final String ITINERARY_EVENT_KEY = "itinerary_event_key";
 
     private TextView          title;
     private TextInputEditText eventTitleEditText;
@@ -35,6 +41,8 @@ public class ItineraryEventDetailFragment extends BaseFragment {
     private String   eventTitle;
     private DateTime startDateTime = DateTime.now();
     private DateTime endDateTime   = DateTime.now();
+    private boolean modifying = false;
+    private ItineraryEvent itineraryEvent = new ItineraryEvent();
 
     @Nullable
     @Override
@@ -78,9 +86,51 @@ public class ItineraryEventDetailFragment extends BaseFragment {
 
         if (getArguments() != null && getArguments().getSerializable(TRIP_KEY) != null) {
             trip = (Trip) getArguments().getSerializable(TRIP_KEY);
+            if (getArguments().getSerializable(ITINERARY_EVENT_KEY) != null) {
+                itineraryEvent = (ItineraryEvent) getArguments().getSerializable(ITINERARY_EVENT_KEY);
+                modifyItineraryEvent();
+                setHasOptionsMenu(true);
+            }
         }
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        if (modifying) {
+            inflater.inflate(R.menu.menu_trip, menu);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_delete:
+                showProgressDialog();
+                deleteItineraryEventItem(title, itineraryEvent);
+                dismissProgressDialog();
+                getActivity().finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Modify the selected itinerary event
+     */
+    public void modifyItineraryEvent() {
+        modifying = true;
+        eventTitleEditText.setText(itineraryEvent.title);
+
+        startDateTime = itineraryEvent.startTime;
+        startDateEditText.setText(DateTimeUtils.getNumericalDate(itineraryEvent.startTime));
+        startTimeEditText.setText(DateTimeUtils.getTime(itineraryEvent.startTime));
+
+        endDateTime = itineraryEvent.endTime;
+        endDateEditText.setText(DateTimeUtils.getNumericalDate(itineraryEvent.endTime));
+        endTimeEditText.setText(DateTimeUtils.getTime(itineraryEvent.endTime));
     }
 
     /**
@@ -139,12 +189,23 @@ public class ItineraryEventDetailFragment extends BaseFragment {
         showTimePicker(getActivity(), endDateTime, onTimeSetListener);
     }
 
+    /**
+     * Save the itinerary event and trip on save click
+     */
     private void onSaveClick() {
         if (validateItem()) {
-            eventTitle = eventTitleEditText.getText().toString();
-            ItineraryEvent itineraryEvent = new ItineraryEvent(eventTitle, "", startDateTime, endDateTime);
-            trip.events.add(itineraryEvent);
             showProgressDialog();
+            eventTitle = eventTitleEditText.getText().toString();
+            if (modifying) {
+                int index = trip.events.indexOf(itineraryEvent);
+                itineraryEvent.title = eventTitle;
+                itineraryEvent.startTime = startDateTime;
+                itineraryEvent.endTime = endDateTime;
+                trip.events.set(index, itineraryEvent);
+            } else {
+                itineraryEvent = new ItineraryEvent(eventTitle, "", startDateTime, endDateTime);
+                trip.events.add(itineraryEvent);
+            }
             updateTripInDB(title);
             dismissProgressDialog();
             getActivity().finish();

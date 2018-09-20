@@ -1,6 +1,7 @@
 package com.vish.travelbook;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.vish.travelbook.model.ItineraryEvent;
 import com.vish.travelbook.model.Trip;
 import com.vish.travelbook.utils.DateTimeUtils;
+
+import static com.vish.travelbook.ItineraryEventDetailFragment.ITINERARY_EVENT_KEY;
+import static com.vish.travelbook.TripDetailActivity.TRIP_KEY;
+import static com.vish.travelbook.TripEditActivity.EDIT_ITINERARY_EVENT;
+import static com.vish.travelbook.TripEditActivity.EDIT_KEY;
 
 public class TripItineraryAdapter extends RecyclerView.Adapter<TripItineraryAdapter.ItineraryEventViewHolder> {
 
@@ -31,7 +37,8 @@ public class TripItineraryAdapter extends RecyclerView.Adapter<TripItineraryAdap
         return new ItineraryEventViewHolder(LayoutInflater.from(context).inflate(R.layout.list_itinerary_event, parent, false));
     }
 
-    @Override public void onBindViewHolder(@NonNull final ItineraryEventViewHolder holder, final int position) {
+    @Override
+    public void onBindViewHolder(@NonNull final ItineraryEventViewHolder holder, final int position) {
         if (!trip.events.isEmpty()) {
             ItineraryEvent itineraryEvent = trip.events.get(position);
             holder.title.setText(itineraryEvent.title);
@@ -58,14 +65,20 @@ public class TripItineraryAdapter extends RecyclerView.Adapter<TripItineraryAdap
 
         public ItineraryEventViewHolder(View view) {
             super(view);
+            view.setOnClickListener(this);
             title = view.findViewById(R.id.itinerary_event_title);
             description = view.findViewById(R.id.itinerary_event_description);
             date = view.findViewById(R.id.itinerary_event_date);
             time = view.findViewById(R.id.itinerary_event_time);
         }
 
-        @Override public void onClick(final View view) {
-            //TODO open edit event item
+        @Override
+        public void onClick(final View view) {
+            Intent intent = new Intent(context, TripEditActivity.class);
+            intent.putExtra(EDIT_KEY, EDIT_ITINERARY_EVENT);
+            intent.putExtra(TRIP_KEY, trip);
+            intent.putExtra(ITINERARY_EVENT_KEY, trip.events.get(getAdapterPosition()));
+            context.startActivity(intent);
         }
     }
 }
