@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.snackbar.Snackbar;
 import com.vish.travelbook.database.DbHelper;
 import com.vish.travelbook.database.TripContract.TripEntry;
+import com.vish.travelbook.model.Expense;
 import com.vish.travelbook.model.ItineraryEvent;
 import com.vish.travelbook.model.PackingItem;
 import com.vish.travelbook.model.Trip;
@@ -98,6 +99,14 @@ public abstract class BaseFragment extends Fragment {
      */
     public void deleteItineraryEventItem(View view, ItineraryEvent event) {
         trip.events.remove(event);
+        updateTripInDB(view);
+    }
+
+    /**
+     * Delete the selected expense
+     */
+    public void deleteExpense(View view, Expense expense) {
+        trip.expenses.remove(expense);
         updateTripInDB(view);
     }
 
