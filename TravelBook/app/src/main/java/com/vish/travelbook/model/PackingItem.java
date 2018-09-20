@@ -11,7 +11,6 @@ public class PackingItem implements Serializable {
     public int    quantity;
 
     public PackingItem() {
-
     }
 
     public PackingItem(String item, int quantity) {

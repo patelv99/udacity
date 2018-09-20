@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
+import static com.vish.travelbook.ItineraryEventDetailFragment.ITINERARY_EVENT_KEY;
 import static com.vish.travelbook.PackingItemDetailFragment.PACKING_ITEM_KEY;
 import static com.vish.travelbook.TripDetailActivity.TRIP_KEY;
 
@@ -45,6 +46,9 @@ public class TripEditActivity extends BaseActivity {
                 break;
             case EDIT_ITINERARY_EVENT:
                 fragment = new ItineraryEventDetailFragment();
+                if (getIntent().hasExtra(ITINERARY_EVENT_KEY)) {
+                    bundle.putSerializable(ITINERARY_EVENT_KEY, getIntent().getSerializableExtra(ITINERARY_EVENT_KEY));
+                }
                 break;
             case EDIT_EXPENSE:
                 fragment = new ExpenseDetailFragment();

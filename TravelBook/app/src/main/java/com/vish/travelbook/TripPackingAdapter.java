@@ -51,7 +51,7 @@ public class TripPackingAdapter extends RecyclerView.Adapter<TripPackingAdapter.
         }
     }
 
-    public class PackingItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+    public class PackingItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public TextView quantity;
         public TextView item;
@@ -70,13 +70,6 @@ public class TripPackingAdapter extends RecyclerView.Adapter<TripPackingAdapter.
             intent.putExtra(TRIP_KEY, trip);
             intent.putExtra(PACKING_ITEM_KEY, trip.packingItems.get(getAdapterPosition()));
             context.startActivity(intent);
-        }
-
-        @Override
-        public boolean onLongClick(final View view) {
-            //TODO open dialog to delete
-            //TODO change this to swipe to delete
-            return false;
         }
     }
 }
