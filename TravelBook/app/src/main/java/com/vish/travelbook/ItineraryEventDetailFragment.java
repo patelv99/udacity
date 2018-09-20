@@ -120,7 +120,7 @@ public class ItineraryEventDetailFragment extends BaseFragment {
     /**
      * Modify the selected itinerary event
      */
-    public void modifyItineraryEvent() {
+    private void modifyItineraryEvent() {
         modifying = true;
         eventTitleEditText.setText(itineraryEvent.title);
 

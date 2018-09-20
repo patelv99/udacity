@@ -3,6 +3,9 @@ package com.vish.travelbook;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -21,6 +24,8 @@ import static com.vish.travelbook.TripDetailActivity.TRIP_KEY;
 
 public class ExpenseDetailFragment extends BaseFragment {
 
+    public static final String EXPENSE_KEY = "expense_key";
+
     private TextView          title;
     private TextInputEditText expenseDescriptionEditText;
     private TextInputEditText expenseDateEditText;
@@ -28,6 +33,8 @@ public class ExpenseDetailFragment extends BaseFragment {
     private Button            saveButton;
 
     private DateTime expenseDate = DateTime.now();
+    private boolean  modifying   = false;
+    private Expense  expense     = new Expense();
 
     @Nullable
     @Override
@@ -53,9 +60,43 @@ public class ExpenseDetailFragment extends BaseFragment {
 
         if (getArguments() != null && getArguments().getSerializable(TRIP_KEY) != null) {
             trip = (Trip) getArguments().getSerializable(TRIP_KEY);
+            if (getArguments().getSerializable(EXPENSE_KEY) != null) {
+                expense = (Expense) getArguments().getSerializable(EXPENSE_KEY);
+                modifyExpense();
+                setHasOptionsMenu(true);
+            }
         }
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        if (modifying) {
+            inflater.inflate(R.menu.menu_trip, menu);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_delete:
+                showProgressDialog();
+                deleteExpense(title, expense);
+                dismissProgressDialog();
+                getActivity().finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void modifyExpense() {
+        modifying = true;
+        expenseDescriptionEditText.setText(expense.description);
+        expenseAmountEditText.setText(Double.toString(expense.amount));
+        expenseDate = expense.dateTime;
+        expenseDateEditText.setText(DateTimeUtils.getNumericalDate(expense.dateTime));
     }
 
     /**
@@ -72,11 +113,24 @@ public class ExpenseDetailFragment extends BaseFragment {
         showDatePicker(getActivity(), expenseDate, onDateSetListener);
     }
 
+    /**
+     * Save the expense and trip on save click
+     */
     private void onSaveClick() {
         if (validateItem()) {
-            Expense expense = new Expense(expenseDescriptionEditText.getText().toString(), 0.0, new DateTime());
-            trip.expenses.add(expense);
             showProgressDialog();
+            if (modifying) {
+                int index = trip.expenses.indexOf(expense);
+                expense.description = expenseDescriptionEditText.getText().toString();
+                expense.amount = Double.parseDouble(expenseAmountEditText.getText().toString());
+                expense.dateTime = expenseDate;
+                trip.expenses.set(index, expense);
+            } else {
+                expense = new Expense(expenseDescriptionEditText.getText().toString(),
+                                      Double.parseDouble(expenseAmountEditText.getText().toString()),
+                                      expenseDate);
+                trip.expenses.add(expense);
+            }
             updateTripInDB(title);
             dismissProgressDialog();
             getActivity().finish();
