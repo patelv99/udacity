@@ -30,10 +30,30 @@
             android:parentActivityName=".HomeActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
 
+        <activity android:name=".widget.WidgetConfigureActivity">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
+
         <provider
             android:name=".database.TripContentProvider"
             android:authorities="com.vish.travelbook"
             android:exported="false"/>
+
+        <receiver
+            android:name=".widget.ItineraryWidget"
+            android:icon="@mipmap/ic_launcher"
+            android:label="Trip Itinerary Widget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/trip_itinerary_widget_info"/>
+        </receiver>
+
     </application>
 
 </manifest>
