@@ -54,6 +54,8 @@
                 android:resource="@xml/trip_itinerary_widget_info"/>
         </receiver>
 
+        <receiver android:name=".notifications.NotificationService"/>
+
     </application>
 
 </manifest>

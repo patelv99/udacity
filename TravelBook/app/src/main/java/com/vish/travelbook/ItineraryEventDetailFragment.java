@@ -3,7 +3,6 @@ package com.vish.travelbook;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,6 +19,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.vish.travelbook.model.ItineraryEvent;
 import com.vish.travelbook.model.Trip;
+import com.vish.travelbook.notifications.NotificationUtils;
 import com.vish.travelbook.utils.DateTimeUtils;
 import org.joda.time.DateTime;
 
@@ -197,6 +197,7 @@ public class ItineraryEventDetailFragment extends BaseFragment {
             eventTitle = eventTitleEditText.getText().toString();
             if (modifying) {
                 int index = trip.events.indexOf(itineraryEvent);
+                NotificationUtils.cancelEventNotification(getActivity(), itineraryEvent);
                 itineraryEvent.title = eventTitle;
                 itineraryEvent.startTime = startDateTime;
                 itineraryEvent.endTime = endDateTime;
@@ -206,6 +207,7 @@ public class ItineraryEventDetailFragment extends BaseFragment {
                 trip.events.add(itineraryEvent);
             }
             updateTripInDB(title);
+            NotificationUtils.scheduleEventNotification(getActivity(), itineraryEvent, trip);
             dismissProgressDialog();
             getActivity().finish();
         } else {

@@ -11,6 +11,9 @@ public class DateTimeUtils {
     private static final DateTimeFormatter TEXT_DATE_FORMAT            = DateTimeFormat.forPattern("MMM dd, yyyy");
     private static final DateTimeFormatter TIME_FORMAT                 = DateTimeFormat.forPattern("h:mm aa");
 
+    private static final int EVENT_NOTIFICATION_MINUTES = 30;
+    private static final int TRIP_NOTIFICATION_DAYS = 1;
+
     public static String getDatesDuration(DateTime startDate, DateTime endDate) {
         if (startDate.getDayOfYear() == endDate.getDayOfYear()) {
             return getTextDate(startDate);
@@ -50,5 +53,13 @@ public class DateTimeUtils {
 
     public static String getTime(DateTime dateTime) {
         return TIME_FORMAT.print(dateTime);
+    }
+
+    public static DateTime getTripNotificationTime(DateTime dateTime) {
+        return dateTime.minusDays(TRIP_NOTIFICATION_DAYS);
+    }
+
+    public static DateTime getEventNotificationTime(DateTime dateTime) {
+        return dateTime.minusMinutes(EVENT_NOTIFICATION_MINUTES);
     }
 }

@@ -21,6 +21,7 @@ import com.vish.travelbook.model.Expense;
 import com.vish.travelbook.model.ItineraryEvent;
 import com.vish.travelbook.model.PackingItem;
 import com.vish.travelbook.model.Trip;
+import com.vish.travelbook.notifications.NotificationUtils;
 import org.joda.time.DateTime;
 
 public abstract class BaseFragment extends Fragment {
@@ -53,7 +54,8 @@ public abstract class BaseFragment extends Fragment {
         ContentValues values = DbHelper.createTripContentValues(trip);
         Uri uri = getActivity().getContentResolver().insert(TripEntry.CONTENT_URI, values);
         if (uri != null) {
-            Snackbar.make(view, trip.title + " was added to db", Snackbar.LENGTH_SHORT).show();
+            NotificationUtils.scheduleTripNotification(getActivity(), trip);
+            Snackbar.make(view, getString(R.string.saved_to_db_message, trip.title), Snackbar.LENGTH_SHORT).show();
             Log.i(getClass().getSimpleName(), trip.title + " was added to db");
             trip.id = (int) ContentUris.parseId(uri);
         }
@@ -67,7 +69,8 @@ public abstract class BaseFragment extends Fragment {
         ContentValues values = DbHelper.createTripContentValues(trip);
         int result = getActivity().getContentResolver().update(uri, values, null, null);
         if (result > 0) {
-            Snackbar.make(view, trip.title + " was updated in db", Snackbar.LENGTH_SHORT).show();
+            NotificationUtils.scheduleTripNotification(getActivity(), trip);
+            Snackbar.make(view, getString(R.string.updated_in_db_message, trip.title), Snackbar.LENGTH_SHORT).show();
             Log.i(getClass().getSimpleName(), trip.title + " was updated in db");
         }
     }
@@ -77,10 +80,10 @@ public abstract class BaseFragment extends Fragment {
      */
     public void deleteTrip(View view) {
         Uri uri = TripEntry.CONTENT_URI.buildUpon().appendPath(Integer.toString(trip.id)).build();
-
         int result = getActivity().getContentResolver().delete(uri, null, null);
         if (result > 0) {
-            Snackbar.make(view, trip.title + "was deleted from the db", Snackbar.LENGTH_SHORT).show();
+            NotificationUtils.cancelTripNotification(getActivity(), trip);
+            Snackbar.make(view, getString(R.string.removed_from_db_message, trip.title), Snackbar.LENGTH_SHORT).show();
             Log.i(getClass().getSimpleName(), trip.title + " was deleted from the db");
 
         }
