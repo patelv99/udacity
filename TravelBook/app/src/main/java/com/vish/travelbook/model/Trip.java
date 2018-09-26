@@ -35,20 +35,4 @@ public class Trip implements Serializable {
             return image;
         }
     }
-
-    public static List<Trip> mockTrips(int num) {
-        List<Trip> trips = new ArrayList<>();
-        for (int i = 0; i < num; i++) {
-            trips.add(mock(i));
-        }
-        return trips;
-    }
-
-    public static Trip mock(int num) {
-        Trip trip = new Trip("Trip " + num, DateTime.now().plusDays(num), DateTime.now().plusDays(num * 2), "image");
-        trip.events = new ArrayList<>(ItineraryEvent.mock(num));
-        trip.packingItems = new ArrayList<>(PackingItem.mock(num));
-        trip.expenses = new ArrayList<>(Expense.mock(num));
-        return trip;
-    }
 }

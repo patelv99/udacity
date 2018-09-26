@@ -101,8 +101,7 @@ public class PackingItemDetailFragment extends BaseFragment {
                 packingItem.quantity = quantity;
                 trip.packingItems.set(index, packingItem);
             } else {
-                packingItem.item = item;
-                packingItem.quantity = quantity;
+                packingItem = new PackingItem(item, quantity);
                 trip.packingItems.add(packingItem);
             }
             updateTripInDB(title);

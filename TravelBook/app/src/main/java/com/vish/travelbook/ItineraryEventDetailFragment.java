@@ -19,7 +19,6 @@ import androidx.annotation.Nullable;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.vish.travelbook.model.ItineraryEvent;
-import com.vish.travelbook.model.PackingItem;
 import com.vish.travelbook.model.Trip;
 import com.vish.travelbook.utils.DateTimeUtils;
 import org.joda.time.DateTime;
@@ -38,10 +37,10 @@ public class ItineraryEventDetailFragment extends BaseFragment {
     private TextInputEditText endTimeEditText;
     private Button            saveButton;
 
-    private String   eventTitle;
-    private DateTime startDateTime = DateTime.now();
-    private DateTime endDateTime   = DateTime.now();
-    private boolean modifying = false;
+    private String         eventTitle;
+    private DateTime       startDateTime  = DateTime.now();
+    private DateTime       endDateTime    = DateTime.now();
+    private boolean        modifying      = false;
     private ItineraryEvent itineraryEvent = new ItineraryEvent();
 
     @Nullable
