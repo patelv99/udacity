@@ -1,34 +1,59 @@
 package com.vish.travelbook;
 
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.vish.travelbook.database.DbHelper;
+import com.vish.travelbook.database.TripContract;
+import com.vish.travelbook.model.PackingItem;
+import com.vish.travelbook.model.Trip;
+
+import java.util.List;
+import java.util.Map;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.vish.travelbook.database.DbHelper;
-import com.vish.travelbook.database.TripContract;
-import com.vish.travelbook.model.Trip;
 
+import static androidx.recyclerview.widget.RecyclerView.Adapter;
+import static androidx.recyclerview.widget.RecyclerView.VERTICAL;
 import static com.vish.travelbook.TripDetailActivity.TRIP_KEY;
 
 public class TripDetailTabFragment extends BaseFragment {
 
-    public static final String TAB_KEY       = "tab_key";
-    public static final String PACKING_TAB   = "packing_tab";
+    public static final String TAB_KEY = "tab_key";
+    public static final String PACKING_TAB = "packing_tab";
     public static final String ITINERARY_TAB = "itinerary_tab";
-    public static final String EXPENSES_TAB  = "expenses_tab";
+    public static final String EXPENSES_TAB = "expenses_tab";
+
+    public static final String FIRESTORE_PACKING_LIST_COLLECTION_KEY = "packingLists";
+    public static final String FIRESTORE_PACKING_LIST_DOC_KEY = "places";
+    public static final String FIRESTORE_PACKING_LIST_PLACES_MAP_KEY = "placesMap";
 
     private RecyclerView recyclerView;
+    private Adapter adapter = null;
 
     private String tabType;
+    private Map<String, List<String>> packingLists;
+    private int selectedPlace = -1;
 
     @Nullable
     @Override
@@ -39,24 +64,43 @@ public class TripDetailTabFragment extends BaseFragment {
             trip = (Trip) getArguments().getSerializable(TRIP_KEY);
             tabType = getArguments().getString(TAB_KEY);
         }
-        //populateData();
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), VERTICAL, false));
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
 
         return view;
     }
 
-    @Override public void onResume() {
+    @Override
+    public void onResume() {
         super.onResume();
         showProgressDialog();
         new GetTripTask().execute();
     }
 
+    @Override
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        if (tabType.equals(PACKING_TAB)) {
+            inflater.inflate(R.menu.menu_packing_list, menu);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_get_suggestions:
+                showProgressDialog();
+                getPackingSuggestions();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void populateData() {
-        RecyclerView.Adapter adapter = null;
         switch (tabType) {
             case PACKING_TAB:
                 adapter = new TripPackingAdapter(getContext(), trip);
+                setHasOptionsMenu(true);
                 break;
             case ITINERARY_TAB:
                 adapter = new TripItineraryAdapter(getContext(), trip);
@@ -70,6 +114,63 @@ public class TripDetailTabFragment extends BaseFragment {
         if (adapter != null) {
             recyclerView.setAdapter(adapter);
         }
+    }
+
+    private void getPackingSuggestions() {
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+
+        firebaseFirestore.collection(FIRESTORE_PACKING_LIST_COLLECTION_KEY)
+                .document(FIRESTORE_PACKING_LIST_DOC_KEY)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        packingLists = (Map<String, List<String>>) documentSnapshot.get(FIRESTORE_PACKING_LIST_PLACES_MAP_KEY);
+                        if (packingLists != null && !packingLists.isEmpty()) {
+                            String[] placeStrings = packingLists.keySet().toArray(new String[packingLists.keySet().size()]);
+                            showSuggestionDialog(placeStrings);
+                            dismissProgressDialog();
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(HomeActivity.class.getSimpleName(), e.getMessage());
+                        dismissProgressDialog();
+                        Snackbar.make(recyclerView, getString(R.string.firebase_suggestions_error), Snackbar.LENGTH_SHORT).show();
+                    }
+                });
+
+    }
+
+    private void showSuggestionDialog(final String[] places) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setSingleChoiceItems(places, selectedPlace, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                selectedPlace = which;
+            }
+        }).setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                addPackingItems(packingLists.get(places[selectedPlace]));
+                dialog.dismiss();
+            }
+        }).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).show();
+    }
+
+    private void addPackingItems(List<String> suggestedPackingItems) {
+        for (String packingItem : suggestedPackingItems) {
+            trip.packingItems.add(new PackingItem(packingItem, 1));
+        }
+        updateTripInDB(recyclerView);
+        adapter.notifyDataSetChanged();
     }
 
     /**

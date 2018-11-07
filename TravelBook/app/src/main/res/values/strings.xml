@@ -3,6 +3,7 @@
     <string name="app_name">TravelBook</string>
     <string name="action_settings">Settings</string>
     <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
     <string name="save">Save</string>
     <string name="delete">Delete</string>
     <string name="test">Test Notification</string>
@@ -35,6 +36,8 @@
     <string name="packing_item">Item</string>
     <string name="invalid_packing_item">Please enter more information about the item.</string>
     <string name="packing_item_error">There was an error adding the item to your packing list. Please try again.</string>
+    <string name="firebase_suggestions_error">There was an error retrieving suggestions. Please try again.</string>
+    <string name="firebase_get_suggestions">Get Suggestions</string>
 
     <!-- Itinerary Events  -->
     <string name="add_itinerary_event">Add an event to your itinerary</string>

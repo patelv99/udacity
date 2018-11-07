@@ -6,14 +6,17 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+
 import com.vish.travelbook.database.DbHelper;
 import com.vish.travelbook.database.TripContract.TripEntry;
 import com.vish.travelbook.model.Trip;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import static com.vish.travelbook.TripEditActivity.EDIT_KEY;
 import static com.vish.travelbook.TripEditActivity.EDIT_TRIP;
@@ -22,7 +25,7 @@ public class HomeActivity extends BaseActivity {
 
     private RecyclerView recyclerView;
 
-    private List<Trip>      trips;
+    private List<Trip> trips;
     private TripCardAdapter tripCardAdapter;
 
     @Override
@@ -85,8 +88,7 @@ public class HomeActivity extends BaseActivity {
         protected Cursor doInBackground(Void... voids) {
             Cursor cursor;
             try {
-                cursor = getContentResolver().query(TripEntry.CONTENT_URI,
-                                                    null, null, null, null);
+                cursor = getContentResolver().query(TripEntry.CONTENT_URI, null, null, null, null);
             } catch (Exception exception) {
                 Log.e(HomeActivity.class.getSimpleName(), "Failed to load data");
                 return null;

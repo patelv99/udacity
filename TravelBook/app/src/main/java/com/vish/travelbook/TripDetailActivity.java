@@ -3,16 +3,19 @@ package com.vish.travelbook;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
+import com.google.android.material.tabs.TabLayout;
+import com.vish.travelbook.model.Trip;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-import com.google.android.material.tabs.TabLayout;
-import com.vish.travelbook.model.Trip;
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.vish.travelbook.TripDetailTabFragment.EXPENSES_TAB;
 import static com.vish.travelbook.TripDetailTabFragment.ITINERARY_TAB;
@@ -104,7 +107,7 @@ public class TripDetailActivity extends BaseActivity {
     private class TripDetailsPagerAdapter extends FragmentPagerAdapter {
 
         private List<Fragment> tabFragments = new ArrayList<>();
-        private List<String>   tabTitles    = new ArrayList<>();
+        private List<String> tabTitles = new ArrayList<>();
 
         TripDetailsPagerAdapter(FragmentManager manager) {
             super(manager);
