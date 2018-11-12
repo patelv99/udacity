@@ -43,7 +43,6 @@ public class TripCardAdapter extends RecyclerView.Adapter<TripCardAdapter.TripVi
         Trip trip = trips.get(position);
         holder.tripTitle.setText(trip.title);
         holder.tripDate.setText(DateTimeUtils.getDatesDuration(trip.startDate, trip.endDate));
-        holder.thumbnail.setImageResource(android.R.drawable.star_on);
     }
 
     @Override
@@ -57,7 +56,6 @@ public class TripCardAdapter extends RecyclerView.Adapter<TripCardAdapter.TripVi
 
     public class TripViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
-        public ImageView thumbnail;
         public TextView  tripTitle;
         public TextView  tripDate;
 
@@ -65,7 +63,6 @@ public class TripCardAdapter extends RecyclerView.Adapter<TripCardAdapter.TripVi
             super(view);
             view.setOnClickListener(this);
             view.setOnLongClickListener(this);
-            thumbnail = view.findViewById(R.id.thumbnail);
             tripTitle = view.findViewById(R.id.trip_title);
             tripDate = view.findViewById(R.id.trip_date);
         }
