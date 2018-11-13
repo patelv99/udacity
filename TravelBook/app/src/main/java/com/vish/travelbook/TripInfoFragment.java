@@ -2,6 +2,7 @@ package com.vish.travelbook;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -12,28 +13,38 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.TextView;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.vish.travelbook.model.Trip;
 import com.vish.travelbook.utils.DateTimeUtils;
+import com.vish.travelbook.utils.ImageUtils;
+
 import org.joda.time.DateTime;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import static android.app.Activity.RESULT_OK;
 import static com.vish.travelbook.TripDetailActivity.TRIP_KEY;
+import static com.vish.travelbook.utils.ImageUtils.SELECT_PICTURE_REQUEST_CODE;
 
 public class TripInfoFragment extends BaseFragment {
 
-    private TextView          screenTitle;
+    private TextView screenTitle;
     private TextInputEditText tripTitleEditText;
     private TextInputEditText tripStartEditText;
     private TextInputEditText tripEndEditText;
-    private Button            tripSaveButton;
+    private ImageView tripImageButton;
+    private ImageView tripImage;
+    private Button tripSaveButton;
 
-    private boolean  modifying     = false;
+    private boolean modifying = false;
     private DateTime tripStartDate = DateTime.now();
-    private DateTime tripEndDate   = DateTime.now();
+    private DateTime tripEndDate = DateTime.now();
+    private String tripImageString = "";
 
     @Nullable
     @Override
@@ -44,9 +55,18 @@ public class TripInfoFragment extends BaseFragment {
         tripTitleEditText = view.findViewById(R.id.trip_info_title);
         tripStartEditText = view.findViewById(R.id.trip_info_start);
         tripEndEditText = view.findViewById(R.id.trip_info_end);
+        tripImage = view.findViewById(R.id.trip_info_image);
+        tripImageButton = view.findViewById(R.id.trip_info_image_button);
+        tripImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openImagePicker();
+            }
+        });
         tripSaveButton = view.findViewById(R.id.trip_info_save_button);
         tripSaveButton.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(final View view) {
+            @Override
+            public void onClick(final View view) {
                 onSaveClick();
             }
         });
@@ -124,6 +144,27 @@ public class TripInfoFragment extends BaseFragment {
         return super.onOptionsItemSelected(item);
     }
 
+    private void openImagePicker() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE_REQUEST_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == SELECT_PICTURE_REQUEST_CODE) {
+                Uri imageUri = data.getData();
+                if (imageUri != null) {
+                    tripImageString = ImageUtils.encodeImageToBase64(imageUri, getActivity());
+                    tripImage.setImageBitmap(ImageUtils.base64ToBitmap(tripImageString));
+                }
+            }
+        }
+    }
+
     /**
      * Populate trip data for modification
      */
@@ -132,6 +173,10 @@ public class TripInfoFragment extends BaseFragment {
         tripTitleEditText.setText(trip.title);
         tripStartEditText.setText(DateTimeUtils.getNumericalShortDate(trip.startDate));
         tripEndEditText.setText(DateTimeUtils.getNumericalShortDate(trip.endDate));
+        if (!trip.image.isEmpty()) {
+            tripImageString = trip.image;
+            tripImage.setImageBitmap(ImageUtils.base64ToBitmap(tripImageString));
+        }
     }
 
     /**
@@ -146,6 +191,7 @@ public class TripInfoFragment extends BaseFragment {
         trip.title = tripTitleEditText.getText().toString();
         trip.startDate = DateTimeUtils.parseNumericalShortDate(tripStartEditText.getText().toString());
         trip.endDate = DateTimeUtils.parseNumericalShortDate(tripEndEditText.getText().toString());
+        trip.image = tripImageString;
 
         return !TextUtils.isEmpty(trip.title) && trip.startDate.isBefore(trip.endDate);
     }

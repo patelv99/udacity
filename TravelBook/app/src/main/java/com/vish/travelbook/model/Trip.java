@@ -30,7 +30,7 @@ public class Trip implements Serializable {
 
     public String getImage() {
         if (image == null) {
-            return "image";
+            return "";
         } else {
             return image;
         }

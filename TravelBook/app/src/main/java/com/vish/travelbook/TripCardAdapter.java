@@ -2,16 +2,21 @@ package com.vish.travelbook;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+
 import com.vish.travelbook.model.Trip;
 import com.vish.travelbook.utils.DateTimeUtils;
+import com.vish.travelbook.utils.ImageUtils;
+
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import static com.vish.travelbook.TripDetailActivity.TRIP_KEY;
 import static com.vish.travelbook.TripEditActivity.EDIT_KEY;
@@ -20,7 +25,7 @@ import static com.vish.travelbook.TripEditActivity.EDIT_TRIP;
 public class TripCardAdapter extends RecyclerView.Adapter<TripCardAdapter.TripViewHolder> {
 
     private List<Trip> trips;
-    private Context    context;
+    private Context context;
 
     public TripCardAdapter(Context context) {
         this.context = context;
@@ -32,7 +37,8 @@ public class TripCardAdapter extends RecyclerView.Adapter<TripCardAdapter.TripVi
         notifyDataSetChanged();
     }
 
-    @NonNull @Override
+    @NonNull
+    @Override
     public TripViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.list_trip_card, parent, false);
         return new TripViewHolder(view);
@@ -43,6 +49,10 @@ public class TripCardAdapter extends RecyclerView.Adapter<TripCardAdapter.TripVi
         Trip trip = trips.get(position);
         holder.tripTitle.setText(trip.title);
         holder.tripDate.setText(DateTimeUtils.getDatesDuration(trip.startDate, trip.endDate));
+        if (!trip.image.isEmpty()) {
+            Bitmap tripImage = ImageUtils.base64ToBitmap(trip.image);
+            holder.thumbnail.setImageBitmap(tripImage);
+        }
     }
 
     @Override
@@ -56,13 +66,15 @@ public class TripCardAdapter extends RecyclerView.Adapter<TripCardAdapter.TripVi
 
     public class TripViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
-        public TextView  tripTitle;
-        public TextView  tripDate;
+        public ImageView thumbnail;
+        public TextView tripTitle;
+        public TextView tripDate;
 
         public TripViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
             view.setOnLongClickListener(this);
+            thumbnail = view.findViewById(R.id.thumbnail);
             tripTitle = view.findViewById(R.id.trip_title);
             tripDate = view.findViewById(R.id.trip_date);
         }

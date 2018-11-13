@@ -26,7 +26,7 @@
     <string name="create_trip">Create your trip</string>
     <string name="modify_trip">Modify your trip</string>
     <string name="trip_title">Trip Title</string>
-    <string name="trip_image">Upload an image (Optional)</string>
+    <string name="trip_image">Upload an image</string>
     <string name="invalid_trip_info">Please enter more information about the trip.</string>
 
 
