@@ -9,32 +9,32 @@
 
     <TextView
         android:id="@+id/expense_item_datetime"
+        style="@style/DetailBody"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@id/expense_item_amount"
-        style="@style/DetailBody"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/expense_item_title"
+        style="@style/DetailSubTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/expense_item_datetime"
-        app:layout_constraintEnd_toStartOf="@id/expense_item_amount"
         app:layout_constraintBottom_toBottomOf="parent"
-        style="@style/DetailSubTitle"/>
+        app:layout_constraintEnd_toStartOf="@id/expense_item_amount"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/expense_item_datetime" />
 
     <TextView
         android:id="@+id/expense_item_amount"
+        style="@style/DetailSubTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/expense_item_title"
         app:layout_constraintBottom_toBottomOf="parent"
-        style="@style/DetailSubTitle"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/expense_item_title" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

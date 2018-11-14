@@ -8,8 +8,8 @@
 
 
     <com.google.android.material.appbar.AppBarLayout
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
@@ -18,17 +18,16 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/AppTheme.PopupOverlay"/>
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/trip_details_tablayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/primary_blue"
-            app:tabTextColor="@color/white"
             app:tabMode="fixed"
-            app:tabSelectedTextColor="@color/white">
-        </com.google.android.material.tabs.TabLayout>
+            app:tabSelectedTextColor="@color/white"
+            app:tabTextColor="@color/white" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -36,8 +35,7 @@
         android:id="@+id/trip_details_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-    </androidx.viewpager.widget.ViewPager>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -45,6 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/icon_plus_white"/>
+        android:contentDescription="@string/cd_trip_detail_fab"
+        app:srcCompat="@drawable/icon_plus_white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

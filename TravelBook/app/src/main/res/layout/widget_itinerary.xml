@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_itinerary"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/widget_background"
+    android:orientation="vertical"
     android:padding="5dp">
 
     <TextView
         android:id="@+id/widget_itinerary_title"
+        style="@style/WidgetTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="6dp"
-        style="@style/WidgetTitle"/>
+        android:layout_marginBottom="6dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,19 +22,19 @@
 
         <TextView
             android:id="@+id/widget_itinerary_event_name"
+            style="@style/WidgetDetail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginEnd="3dp"
-            style="@style/WidgetDetail"/>
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/widget_itinerary_event_time"
+            style="@style/WidgetDetail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginStart="3dp"
-            android:gravity="end"
-            style="@style/WidgetDetail"/>
+            android:layout_weight="1"
+            android:gravity="end" />
     </LinearLayout>
 </LinearLayout>

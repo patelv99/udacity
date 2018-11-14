@@ -64,4 +64,12 @@
     <string name="widget_no_upcoming_events">No upcoming event</string>
     <string name="widget_add_events">Please add an event</string>
     <string name="widget_error_loading_app">There was a problem loading TravelBook</string>
+
+    <!-- Content Descriptions -->
+    <string name="cd_home_fab">Create trip</string>
+    <string name="cd_trip_detail_fab">Add item to trip</string>
+    <string name="cd_save">Save</string>
+    <string name="cd_add_image">Add image</string>
+
+
 </resources>

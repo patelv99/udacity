@@ -1,52 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/list_itinerary_event"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/list_itinerary_event"
     android:paddingTop="5dp"
     android:paddingBottom="5dp">
 
     <TextView
         android:id="@+id/itinerary_event_title"
+        style="@style/DetailSubTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
-        android:maxLines="1"
         android:ellipsize="end"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:maxLines="1"
         app:layout_constraintEnd_toStartOf="@id/itinerary_event_time"
-        style="@style/DetailSubTitle"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/itinerary_event_description"
+        style="@style/DetailBody"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
-        android:maxLines="1"
         android:ellipsize="end"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/itinerary_event_title"
+        android:maxLines="1"
         app:layout_constraintEnd_toStartOf="@id/itinerary_event_time"
-        style="@style/DetailBody"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/itinerary_event_title" />
 
     <TextView
         android:id="@+id/itinerary_event_date"
+        style="@style/DetailSubTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        style="@style/DetailSubTitle"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/itinerary_event_time"
+        style="@style/DetailSubTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/itinerary_event_date"
         app:layout_constraintBottom_toBottomOf="parent"
-        style="@style/DetailSubTitle"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/itinerary_event_date" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
