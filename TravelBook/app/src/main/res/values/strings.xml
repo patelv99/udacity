@@ -71,5 +71,8 @@
     <string name="cd_save">Save</string>
     <string name="cd_add_image">Add image</string>
 
+    <!-- Transitions -->
+    <string name="transition_trip_image">trip_image</string>
+
 
 </resources>

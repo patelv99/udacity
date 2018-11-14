@@ -1,5 +1,6 @@
 package com.vish.travelbook;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -16,6 +17,7 @@ import com.vish.travelbook.utils.ImageUtils;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import static com.vish.travelbook.TripDetailActivity.TRIP_KEY;
@@ -81,7 +83,6 @@ public class TripCardAdapter extends RecyclerView.Adapter<TripCardAdapter.TripVi
 
         @Override
         public void onClick(final View view) {
-            //TODO make shared element transition
             Intent intent = new Intent(context, TripDetailActivity.class);
             intent.putExtra(TRIP_KEY, trips.get(getAdapterPosition()));
             context.startActivity(intent);
@@ -92,7 +93,8 @@ public class TripCardAdapter extends RecyclerView.Adapter<TripCardAdapter.TripVi
             Intent intent = new Intent(context, TripEditActivity.class);
             intent.putExtra(EDIT_KEY, EDIT_TRIP);
             intent.putExtra(TRIP_KEY, trips.get(getAdapterPosition()));
-            context.startActivity(intent);
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, thumbnail, thumbnail.getTransitionName());
+            context.startActivity(intent, options.toBundle());
             return true;
         }
     }

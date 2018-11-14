@@ -140,6 +140,9 @@ public class TripInfoFragment extends BaseFragment {
                 dismissProgressDialog();
                 getActivity().finish();
                 break;
+            case android.R.id.home:
+                getActivity().supportFinishAfterTransition();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
