@@ -13,11 +13,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.vish.travelbook.database.DbHelper;
 import com.vish.travelbook.database.TripContract;
 import com.vish.travelbook.model.PackingItem;
@@ -117,31 +118,25 @@ public class TripDetailTabFragment extends BaseFragment {
     }
 
     private void getPackingSuggestions() {
-        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                packingLists = (Map<String, List<String>>) dataSnapshot.getValue();
+                if (packingLists != null && !packingLists.isEmpty()) {
+                    String[] placeStrings = packingLists.keySet().toArray(new String[packingLists.keySet().size()]);
+                    showSuggestionDialog(placeStrings);
+                }
+                dismissProgressDialog();
+            }
 
-        firebaseFirestore.collection(FIRESTORE_PACKING_LIST_COLLECTION_KEY)
-                .document(FIRESTORE_PACKING_LIST_DOC_KEY)
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        packingLists = (Map<String, List<String>>) documentSnapshot.get(FIRESTORE_PACKING_LIST_PLACES_MAP_KEY);
-                        if (packingLists != null && !packingLists.isEmpty()) {
-                            String[] placeStrings = packingLists.keySet().toArray(new String[packingLists.keySet().size()]);
-                            showSuggestionDialog(placeStrings);
-                            dismissProgressDialog();
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(HomeActivity.class.getSimpleName(), e.getMessage());
-                        dismissProgressDialog();
-                        Snackbar.make(recyclerView, getString(R.string.firebase_suggestions_error), Snackbar.LENGTH_SHORT).show();
-                    }
-                });
-
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e(HomeActivity.class.getSimpleName(), databaseError.getMessage());
+                dismissProgressDialog();
+                Snackbar.make(recyclerView, getString(R.string.firebase_suggestions_error), Snackbar.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void showSuggestionDialog(final String[] places) {
