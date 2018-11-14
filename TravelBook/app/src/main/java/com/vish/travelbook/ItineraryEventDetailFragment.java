@@ -3,6 +3,7 @@ package com.vish.travelbook;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,15 +14,18 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.vish.travelbook.model.ItineraryEvent;
 import com.vish.travelbook.model.Trip;
 import com.vish.travelbook.notifications.NotificationUtils;
 import com.vish.travelbook.utils.DateTimeUtils;
+
 import org.joda.time.DateTime;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import static com.vish.travelbook.TripDetailActivity.TRIP_KEY;
 
@@ -29,18 +33,18 @@ public class ItineraryEventDetailFragment extends BaseFragment {
 
     public static final String ITINERARY_EVENT_KEY = "itinerary_event_key";
 
-    private TextView          title;
+    private TextView title;
     private TextInputEditText eventTitleEditText;
     private TextInputEditText startDateEditText;
     private TextInputEditText endDateEditText;
     private TextInputEditText startTimeEditText;
     private TextInputEditText endTimeEditText;
-    private Button            saveButton;
+    private Button saveButton;
 
-    private String         eventTitle;
-    private DateTime       startDateTime  = DateTime.now();
-    private DateTime       endDateTime    = DateTime.now();
-    private boolean        modifying      = false;
+    private String eventTitle;
+    private DateTime startDateTime = DateTime.now();
+    private DateTime endDateTime = DateTime.now();
+    private boolean modifying = false;
     private ItineraryEvent itineraryEvent = new ItineraryEvent();
 
     @Nullable
@@ -65,13 +69,15 @@ public class ItineraryEventDetailFragment extends BaseFragment {
         });
         startTimeEditText = view.findViewById(R.id.itinerary_event_start_time);
         startTimeEditText.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(final View v) {
+            @Override
+            public void onClick(final View v) {
                 setStartTime();
             }
         });
         endTimeEditText = view.findViewById(R.id.itinerary_event_end_time);
         endTimeEditText.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(final View v) {
+            @Override
+            public void onClick(final View v) {
                 setEndTime();
             }
         });
@@ -219,9 +225,9 @@ public class ItineraryEventDetailFragment extends BaseFragment {
      * Validate that the event has a title and a valid start and end time
      */
     private boolean validateItem() {
-        return !eventTitleEditText.getText().toString().isEmpty() &&
-               !startDateEditText.getText().toString().isEmpty() &&
-               !endDateEditText.getText().toString().isEmpty() &&
-               startDateTime.isBefore(endDateTime);
+        return TextUtils.isEmpty(eventTitleEditText.getText()) &&
+                TextUtils.isEmpty(startDateEditText.getText()) &&
+                TextUtils.isEmpty(endDateEditText.getText()) &&
+                startDateTime.isBefore(endDateTime);
     }
 }

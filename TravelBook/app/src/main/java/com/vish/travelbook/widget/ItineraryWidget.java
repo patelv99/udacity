@@ -59,7 +59,7 @@ public class ItineraryWidget extends AppWidgetProvider {
                 views.setOnClickPendingIntent(R.id.widget_itinerary, pendingIntent);
                 appWidgetManager.updateAppWidget(widgetId, views);
             } catch (ActivityNotFoundException e) {
-                Toast.makeText(context.getApplicationContext(), "There was a problem loading the application: ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context.getApplicationContext(), context.getString(R.string.widget_error_loading_app), Toast.LENGTH_SHORT).show();
             }
 
         }

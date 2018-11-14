@@ -13,7 +13,7 @@ android {
 
     signingConfigs {
         release {
-            storeFile file('../travelbook.keystore')
+            storeFile file("travelbook.keystore")
             storePassword 'Udacity99'
             keyAlias = 'travelbookKeystore'
             keyPassword 'Udacity99'
