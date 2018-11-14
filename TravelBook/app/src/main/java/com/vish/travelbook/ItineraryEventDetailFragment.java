@@ -225,9 +225,9 @@ public class ItineraryEventDetailFragment extends BaseFragment {
      * Validate that the event has a title and a valid start and end time
      */
     private boolean validateItem() {
-        return TextUtils.isEmpty(eventTitleEditText.getText()) &&
-                TextUtils.isEmpty(startDateEditText.getText()) &&
-                TextUtils.isEmpty(endDateEditText.getText()) &&
+        return !TextUtils.isEmpty(eventTitleEditText.getText()) &&
+                !TextUtils.isEmpty(startDateEditText.getText()) &&
+                !TextUtils.isEmpty(endDateEditText.getText()) &&
                 startDateTime.isBefore(endDateTime);
     }
 }
