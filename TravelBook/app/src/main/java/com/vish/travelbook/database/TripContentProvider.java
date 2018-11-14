@@ -17,6 +17,7 @@ import static com.vish.travelbook.database.TripContract.TripEntry.TABLE_NAME;
 
 public class TripContentProvider extends ContentProvider {
 
+    public static final int TRIP_LOADER_ID = 1;
     public static final int TRIPS        = 100;
     public static final int TRIP_WITH_ID = 101;
 
