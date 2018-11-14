@@ -42,7 +42,9 @@ public class ItineraryWidget extends AppWidgetProvider {
 
                 if (!TextUtils.isEmpty(tripJson)) {
                     trip = gson.fromJson(tripJson, Trip.class);
-                    itineraryEvent = trip.events.get(0);
+                    if (!trip.events.isEmpty()) {
+                        itineraryEvent = trip.events.get(0);
+                    }
                 }
 
                 Intent intent = new Intent(context, TripDetailActivity.class);
@@ -51,6 +53,9 @@ public class ItineraryWidget extends AppWidgetProvider {
                     views.setTextViewText(R.id.widget_itinerary_title, trip.title);
                     views.setTextViewText(R.id.widget_itinerary_event_name, itineraryEvent.title);
                     views.setTextViewText(R.id.widget_itinerary_event_time, DateTimeUtils.getTime(itineraryEvent.startTime));
+                } else {
+                    views.setTextViewText(R.id.widget_itinerary_title, context.getString(R.string.widget_no_upcoming_events));
+                    views.setTextViewText(R.id.widget_itinerary_event_name, context.getString(R.string.widget_add_events));
                 }
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 intent.setComponent(new ComponentName(context.getPackageName(), TripDetailActivity.class.getName()));
