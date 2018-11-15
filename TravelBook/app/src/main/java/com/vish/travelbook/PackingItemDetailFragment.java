@@ -118,8 +118,11 @@ public class PackingItemDetailFragment extends BaseFragment {
      * @return boolean
      */
     private boolean validateItem() {
+        if (TextUtils.isEmpty(quantityEditText.getText()) || TextUtils.isEmpty(itemEditText.getText())) {
+            return false;
+        }
         quantity = Integer.parseInt(quantityEditText.getText().toString());
         item = itemEditText.getText().toString();
-        return quantity > 0 && !TextUtils.isEmpty(item);
+        return quantity > 0;
     }
 }
